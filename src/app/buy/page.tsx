@@ -38,6 +38,15 @@ export default async function BuyPage({
     console.error('Error fetching vehicles:', error)
   }
 
+  // Fetch distinct makes for filter
+  const { data: makesData } = await supabase
+    .from('vehicles')
+    .select('make')
+    .order('make')
+
+  // Extract unique makes
+  const uniqueMakes = Array.from(new Set(makesData?.map(item => item.make) || []))
+
   // Map Supabase data to Car interface (handling potential nulls or mismatches if necessary)
   const cars: Car[] = (vehicles || []).map((v) => ({
     id: v.id,
@@ -63,7 +72,7 @@ export default async function BuyPage({
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar */}
         <aside className="w-full lg:w-1/4">
-          <FilterSidebar />
+          <FilterSidebar makes={uniqueMakes} />
         </aside>
 
         {/* Grid */}

@@ -34,14 +34,15 @@ This document outlines the files containing hardcoded data and the tasks require
     *   Added empty state handling and loading state.
     *   Passed `vehicleId` prop from `CarDetailsPage` to `DigitalLogbook`.
 
-## 4. Inventory Filters
+## 4. Inventory Filters (Completed)
 
 **File:** `src/components/inventory/filter-sidebar.tsx`
 
-*   **Current State:** Hardcoded options for "Make" (Porsche, Mercedes-Benz, etc.) and "Lifestyle" tags.
-*   **Task:**
-    *   **Makes:** Fetch distinct `make` values from the `vehicles` table to populate the dropdown dynamically.
-    *   **Lifestyle:** Fetch distinct tags from a `tags` column or a separate `tags` table if "Lifestyle" is a dynamic feature.
+*   **Status:** ✅ Completed
+*   **Changes:**
+    *   Refactored `FilterSidebar` to accept `makes` as a prop.
+    *   Updated `BuyPage` to fetch unique makes from the `vehicles` table.
+    *   Populated the "Make" dropdown dynamically with real data.
 
 ## 5. Finance Calculator Defaults
 

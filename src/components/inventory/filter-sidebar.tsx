@@ -19,7 +19,11 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 
-export function FilterSidebar() {
+interface FilterSidebarProps {
+  makes: string[]
+}
+
+export function FilterSidebar({ makes }: FilterSidebarProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -85,12 +89,11 @@ export function FilterSidebar() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Makes</SelectItem>
-                    <SelectItem value="Porsche">Porsche</SelectItem>
-                    <SelectItem value="Mercedes-Benz">Mercedes-Benz</SelectItem>
-                    <SelectItem value="Audi">Audi</SelectItem>
-                    <SelectItem value="BMW">BMW</SelectItem>
-                    <SelectItem value="Tesla">Tesla</SelectItem>
-                    <SelectItem value="Ferrari">Ferrari</SelectItem>
+                    {makes.map((make) => (
+                      <SelectItem key={make} value={make}>
+                        {make}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
