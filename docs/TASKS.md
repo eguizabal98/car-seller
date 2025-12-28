@@ -64,14 +64,14 @@ This document outlines the step-by-step plan to build the High-End Second-Hand C
     - "Quick Chat" button implementation.
 
 ## Phase 6: Admin Panel (Command Center)
-- [ ] **Admin Layout**
+- [x] **Admin Layout**
     - Sidebar navigation (Inventory, Leads, Calendar).
     - Protected routes (Admin only).
-- [ ] **Inventory Management**
+- [x] **Inventory Management**
     - CRUD operations for Vehicles.
     - Bulk media uploader to Supabase Storage.
     - Status toggles (Available/Sold/Reserved).
-- [ ] **Lead Dashboard**
+- [x] **Lead Dashboard**
     - Kanban or List view of incoming inquiries.
     - Calendar view of booked test drives.
 
