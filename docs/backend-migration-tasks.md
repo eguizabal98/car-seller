@@ -12,17 +12,16 @@ This document outlines the files containing hardcoded data and the tasks require
     *   Updated `src/app/page.tsx` to fetch vehicles with `is_featured=true` from Supabase.
     *   Added data transformation to match `Car` interface (including fetching primary media).
 
-## 2. Car Details Page - Media & Specs
+## 2. Car Details Page - Media & Specs (Completed)
 
 **File:** `src/app/car/[id]/page.tsx`
 
-*   **Current State:**
-    *   Uses `mockMedia` array for the image gallery.
-    *   Uses a hardcoded `owners: 1` value in the specs object.
-*   **Task:**
-    *   **Media:** Fetch media items from a `media` table (linked by `vehicle_id`) or a `media` JSONB column in the `vehicles` table.
-    *   **Specs:** Add an `owners` column to the `vehicles` table and fetch it dynamically.
-    *   **Video:** Ensure the schema supports video URLs if needed (currently mocked with a YouTube link).
+*   **Status:** ✅ Completed
+*   **Changes:**
+    *   Updated `getCar` to fetch related `media` data.
+    *   Created migration to add `owners` column to `vehicles` table.
+    *   Replaced `mockMedia` with dynamic media mapping (preserving fallback logic for robust rendering).
+    *   Updated `generateMetadata` to use dynamic primary image.
 
 ## 3. Digital Logbook (Service History)
 
