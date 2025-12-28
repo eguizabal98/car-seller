@@ -3,6 +3,7 @@ import { MediaGallery } from '@/components/car-details/media-gallery'
 import { SpecsGrid } from '@/components/car-details/specs-grid'
 import { DigitalLogbook } from '@/components/car-details/digital-logbook'
 import { BookingModal } from '@/components/booking/booking-modal'
+import { FinanceCalculator } from '@/components/tools/finance-calculator'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
@@ -167,11 +168,8 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
                     </div>
                 </div>
                 <Separator className="my-6" />
-                <div className="text-center">
-                    <p className="text-sm text-muted-foreground mb-2">Need financing?</p>
-                    <p className="font-semibold text-primary">Est. $3,450 / month</p>
-                    <Button variant="link" className="h-auto p-0 text-xs">Calculate Payments</Button>
-                </div>
+                {/* Finance Calculator Integrated */}
+                <FinanceCalculator vehiclePrice={car.price} />
             </div>
 
             <DigitalLogbook vehicleId={car.id} />

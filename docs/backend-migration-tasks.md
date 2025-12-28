@@ -44,14 +44,15 @@ This document outlines the files containing hardcoded data and the tasks require
     *   Updated `BuyPage` to fetch unique makes from the `vehicles` table.
     *   Populated the "Make" dropdown dynamically with real data.
 
-## 5. Finance Calculator Defaults
+## 5. Finance Calculator Defaults (Completed)
 
 **File:** `src/components/tools/finance-calculator.tsx`
 
-*   **Current State:** Default interest rate (6.9%) and terms are hardcoded.
-*   **Task:** (Optional/Low Priority)
-    *   Store global finance settings (default APR, min/max deposit) in a `app_settings` or `config` table in Supabase.
-    *   Fetch these defaults on component mount.
+*   **Status:** ✅ Completed
+*   **Changes:**
+    *   Created `app_settings` table in Supabase with default finance configuration.
+    *   Updated `FinanceCalculator` to fetch defaults (interest rate, terms) from the database on mount.
+    *   Added a loading state to the calculator component.
 
 ## 6. Placeholder Images
 
