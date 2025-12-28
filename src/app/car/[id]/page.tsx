@@ -174,7 +174,7 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
                 </div>
             </div>
 
-            <DigitalLogbook />
+            <DigitalLogbook vehicleId={car.id} />
         </div>
       </div>
     </div>

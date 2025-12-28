@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Tabs,
   TabsContent,
@@ -7,8 +9,50 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FileText, CheckCircle, Wrench } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/utils/supabase/client'
+import { format } from 'date-fns'
 
-export function DigitalLogbook() {
+interface ServiceRecord {
+  id: string
+  date: string
+  service_type: string
+  description: string
+  provider: string
+  mileage: number
+}
+
+interface DigitalLogbookProps {
+  vehicleId?: string
+}
+
+export function DigitalLogbook({ vehicleId }: DigitalLogbookProps) {
+  const [history, setHistory] = useState<ServiceRecord[]>([])
+  const [loading, setLoading] = useState(true)
+  const supabase = createClient()
+
+  useEffect(() => {
+    async function fetchHistory() {
+      if (!vehicleId) {
+        setLoading(false)
+        return
+      }
+
+      const { data, error } = await supabase
+        .from('service_history')
+        .select('*')
+        .eq('vehicle_id', vehicleId)
+        .order('date', { ascending: false })
+
+      if (!error && data) {
+        setHistory(data)
+      }
+      setLoading(false)
+    }
+
+    fetchHistory()
+  }, [vehicleId, supabase])
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -30,18 +74,24 @@ export function DigitalLogbook() {
           
           <TabsContent value="service" className="space-y-4 mt-4">
             <div className="border-l-2 border-muted pl-4 space-y-6">
-              <div className="relative">
-                <div className="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-primary" />
-                <h4 className="font-semibold">Major Service - 10,000 mi</h4>
-                <p className="text-sm text-muted-foreground">March 15, 2024 • Porsche Centre London</p>
-                <p className="text-sm mt-1">Oil change, filter replacement, brake fluid flush, comprehensive check.</p>
-              </div>
-              <div className="relative">
-                <div className="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-muted-foreground" />
-                <h4 className="font-semibold">Interim Service - 5,000 mi</h4>
-                <p className="text-sm text-muted-foreground">August 10, 2023 • Porsche Specialist</p>
-                <p className="text-sm mt-1">Oil change, tire rotation, visual inspection.</p>
-              </div>
+              {loading ? (
+                <div className="text-sm text-muted-foreground">Loading history...</div>
+              ) : history.length > 0 ? (
+                history.map((record, index) => (
+                  <div key={record.id} className="relative">
+                    <div className={`absolute -left-[21px] top-1 h-3 w-3 rounded-full ${index === 0 ? 'bg-primary' : 'bg-muted-foreground'}`} />
+                    <h4 className="font-semibold">{record.service_type} - {record.mileage.toLocaleString()} mi</h4>
+                    <p className="text-sm text-muted-foreground">
+                      {format(new Date(record.date), 'MMMM d, yyyy')} • {record.provider}
+                    </p>
+                    <p className="text-sm mt-1">{record.description}</p>
+                  </div>
+                ))
+              ) : (
+                <div className="text-sm text-muted-foreground">
+                  No service history available for this vehicle.
+                </div>
+              )}
             </div>
           </TabsContent>
 

@@ -23,22 +23,16 @@ This document outlines the files containing hardcoded data and the tasks require
     *   Replaced `mockMedia` with dynamic media mapping (preserving fallback logic for robust rendering).
     *   Updated `generateMetadata` to use dynamic primary image.
 
-## 3. Digital Logbook (Service History)
+## 3. Digital Logbook (Service History) (Completed)
 
 **File:** `src/components/car-details/digital-logbook.tsx`
 
-*   **Current State:** Completely hardcoded JSX rendering "Major Service" and "Interim Service" entries.
-*   **Task:**
-    *   Create a `service_history` table in Supabase:
-        *   `id` (uuid)
-        *   `vehicle_id` (uuid, foreign key)
-        *   `date` (date)
-        *   `service_type` (text)
-        *   `description` (text)
-        *   `provider` (text) - e.g., "Porsche Centre London"
-        *   `mileage` (int)
-    *   Fetch this data based on the current vehicle ID.
-    *   Map the fetched data to the service history UI.
+*   **Status:** ✅ Completed
+*   **Changes:**
+    *   Created `service_history` table in Supabase.
+    *   Updated `DigitalLogbook` component to fetch service records by `vehicleId`.
+    *   Added empty state handling and loading state.
+    *   Passed `vehicleId` prop from `CarDetailsPage` to `DigitalLogbook`.
 
 ## 4. Inventory Filters
 
