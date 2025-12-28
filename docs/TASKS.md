@@ -48,19 +48,19 @@ This document outlines the step-by-step plan to build the High-End Second-Hand C
 - [x] **Vehicle Details**
     - "Specs at a Glance" grid icon component.
     - "Digital Logbook" section (Service history mockups/downloads).
-- [ ] **Interactive Elements**
+- [x] **Interactive Elements**
     - *Nice-to-have*: Interactive hotspots on images (custom component).
 
 ## Phase 5: Communication & Scheduling (Custom)
-- [ ] **Custom Booking System**
+- [x] **Custom Booking System**
     - Database table for availability slots.
     - Frontend calendar component for selecting dates/times.
     - Real-time availability check.
-- [ ] **Live Chat System**
+- [x] **Live Chat System**
     - Floating widget.
     - Real-time messaging using Supabase Realtime.
     - Chat history persistence.
-- [ ] **WhatsApp Integration**
+- [x] **WhatsApp Integration**
     - "Quick Chat" button implementation.
 
 ## Phase 6: Admin Panel (Command Center)
