@@ -33,11 +33,13 @@ export function FilterSidebar() {
     const make = searchParams.get('make')
 
     if (minPrice && maxPrice) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       setPriceRange([parseInt(minPrice), parseInt(maxPrice)])
     }
     if (make) {
       setSelectedMake(make)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
 
   const handleApplyFilters = () => {

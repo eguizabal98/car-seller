@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/footer";
 import { ChatWidget } from "@/components/chat/chat-widget";
 import { WhatsAppButton } from "@/components/chat/whatsapp-button";
 import { Toaster } from "@/components/ui/sonner";
+import { ComparisonFloatingBar } from "@/components/tools/comparison-floating-bar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
         <Footer />
         <ChatWidget />
         <WhatsAppButton />
+        <ComparisonFloatingBar />
         <Toaster />
       </body>
     </html>

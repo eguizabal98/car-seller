@@ -76,20 +76,20 @@ This document outlines the step-by-step plan to build the High-End Second-Hand C
     - Calendar view of booked test drives.
 
 ## Phase 7: Advanced Features & Trust
-- [ ] **Self-Service Tools**
+- [x] **Self-Service Tools**
     - Financing Calculator (Client-side logic).
     - Trade-in Valuation form (Zod validation + Supabase Edge Function stub).
-- [ ] **Comparison Tool**
+- [x] **Comparison Tool**
     - State management (Zustand) to store selected cars.
     - Comparison view page.
-- [ ] **SEO Optimization**
+- [x] **SEO Optimization**
     - Dynamic metadata generation for Vehicle Detail Pages.
     - Sitemap generation.
 
 ## Phase 8: Testing & Deployment
 - [ ] **Quality Assurance**
-    - Linting & Type checking.
-    - End-to-End testing flow (Listing -> Booking).
+    - [x] Linting & Type checking.
+    - [ ] End-to-End testing flow (Listing -> Booking).
 - [ ] **Deployment**
     - Deploy to Vercel.
     - Verify Supabase production connections.

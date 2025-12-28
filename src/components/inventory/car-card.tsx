@@ -2,7 +2,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
-import { Fuel, Gauge, Calendar } from 'lucide-react'
+import { Fuel, Gauge, Calendar, Plus, Check } from 'lucide-react'
+import { useComparisonStore } from '@/store/comparison-store'
+import { toast } from 'sonner'
 
 export interface Car {
   id: string
@@ -17,8 +19,28 @@ export interface Car {
 }
 
 export function CarCard({ car }: { car: Car }) {
+  const { addCar, cars, removeCar } = useComparisonStore()
+  const isSelected = cars.some((c) => c.id === car.id)
+
+  const toggleCompare = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    if (isSelected) {
+      removeCar(car.id)
+      toast.info('Removed from comparison')
+    } else {
+      if (cars.length >= 3) {
+        toast.error('You can only compare up to 3 vehicles')
+        return
+      }
+      addCar(car)
+      toast.success('Added to comparison')
+    }
+  }
+
   return (
-    <Card className="overflow-hidden border-none shadow-md hover:shadow-xl transition-shadow duration-300">
+    <Card className="overflow-hidden border-none shadow-md hover:shadow-xl transition-shadow duration-300 group">
       <div className="aspect-[4/3] relative overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img 
@@ -31,6 +53,15 @@ export function CarCard({ car }: { car: Car }) {
             {car.status}
           </Badge>
         </div>
+        <Button
+            size="sm"
+            variant={isSelected ? "default" : "secondary"}
+            className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={toggleCompare}
+        >
+            {isSelected ? <Check className="h-4 w-4 mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
+            Compare
+        </Button>
       </div>
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">

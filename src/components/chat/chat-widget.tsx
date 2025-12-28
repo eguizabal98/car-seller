@@ -8,6 +8,7 @@ import { MessageCircle, X, Send, Loader2 } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { toast } from 'sonner'
 import { User as SupabaseUser } from '@supabase/supabase-js'
+import { cn } from '@/lib/utils'
 
 interface Message {
   id: string
@@ -25,18 +26,6 @@ export function ChatWidget() {
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
-
-  useEffect(() => {
-    // Check auth
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-      if (user) {
-        initializeChat(user.id)
-      }
-    }
-    getUser()
-  }, [])
 
   const initializeChat = async (userId: string) => {
     setIsLoading(true)
@@ -111,6 +100,18 @@ export function ChatWidget() {
     }
     setIsLoading(false)
   }
+
+  useEffect(() => {
+    // Check auth
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+      if (user) {
+        initializeChat(user.id)
+      }
+    }
+    getUser()
+  }, [])
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault()

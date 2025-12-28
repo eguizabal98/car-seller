@@ -8,15 +8,13 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { MessageCircle, CalendarCheck, Share2, Heart } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import { Metadata, ResolvingMetadata } from 'next'
 
 // Define params type as a Promise
 type Params = Promise<{ id: string }>
 
-export default async function CarDetailsPage({ params }: { params: Params }) {
-  const { id } = await params
+async function getCar(id: string) {
   const supabase = await createClient()
-
-  // Fetch Vehicle Data
   const { data: car, error } = await supabase
     .from('vehicles')
     .select('*')
@@ -24,13 +22,48 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
     .single()
 
   if (error || !car) {
-    console.error('Error fetching car:', error)
-    // Handle error or 404
-    // For demo purposes, if ID is not a valid UUID or not found, we might want to show notFound()
-    // but lets be safe.
-    if (error?.code === 'PGRST116') {
-        return notFound()
+    return null
+  }
+  return car
+}
+
+export async function generateMetadata(
+  { params }: { params: Params },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { id } = await params
+  const car = await getCar(id)
+
+  if (!car) {
+    return {
+      title: 'Vehicle Not Found',
     }
+  }
+
+  const previousImages = (await parent).openGraph?.images || []
+  const title = `${car.year} ${car.make} ${car.model} | High-End Car Marketplace`
+  const description = car.description || `Explore this ${car.year} ${car.make} ${car.model}. Price: $${car.price.toLocaleString()}.`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [
+        `https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent(`${car.make} ${car.model} luxury car`)}&image_size=landscape_16_9`,
+        ...previousImages,
+      ],
+    },
+  }
+}
+
+export default async function CarDetailsPage({ params }: { params: Params }) {
+  const { id } = await params
+  const car = await getCar(id)
+
+  if (!car) {
+    return notFound()
   }
 
   // Fetch Media Data (Mocking if table is empty for now or joining if possible)
