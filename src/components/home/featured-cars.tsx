@@ -13,56 +13,17 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge' // Need to install badge? Or use div
 import Link from 'next/link'
 import { Fuel, Gauge, Calendar } from 'lucide-react'
+import { Car } from '@/components/inventory/car-card'
 
-// Mock Data
-const FEATURED_CARS = [
-  {
-    id: 1,
-    make: 'Porsche',
-    model: '911 GT3',
-    year: 2023,
-    price: 245000,
-    mileage: 1200,
-    fuel: 'Petrol',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=porsche%20911%20gt3%20silver%20studio%20lighting%204k&image_size=landscape_4_3',
-    status: 'Available',
-  },
-  {
-    id: 2,
-    make: 'Mercedes-Benz',
-    model: 'G63 AMG',
-    year: 2022,
-    price: 185000,
-    mileage: 15000,
-    fuel: 'Petrol',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=mercedes%20g63%20amg%20black%20matte%20studio%20lighting%204k&image_size=landscape_4_3',
-    status: 'Reserved',
-  },
-  {
-    id: 3,
-    make: 'Audi',
-    model: 'RS e-tron GT',
-    year: 2024,
-    price: 145000,
-    mileage: 500,
-    fuel: 'Electric',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=audi%20rs%20etron%20gt%20grey%20studio%20lighting%204k&image_size=landscape_4_3',
-    status: 'Available',
-  },
-  {
-    id: 4,
-    make: 'BMW',
-    model: 'M4 Competition',
-    year: 2023,
-    price: 95000,
-    mileage: 8500,
-    fuel: 'Petrol',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=bmw%20m4%20competition%20green%20studio%20lighting%204k&image_size=landscape_4_3',
-    status: 'Available',
-  },
-]
+interface FeaturedCarsProps {
+  cars: Car[]
+}
 
-export function FeaturedCars() {
+export function FeaturedCars({ cars }: FeaturedCarsProps) {
+  if (!cars || cars.length === 0) {
+    return null
+  }
+
   return (
     <section className="py-16 bg-muted/30">
       <div className="container">
@@ -83,7 +44,7 @@ export function FeaturedCars() {
           className="w-full"
         >
           <CarouselContent>
-            {FEATURED_CARS.map((car) => (
+            {cars.map((car) => (
               <CarouselItem key={car.id} className="md:basis-1/2 lg:basis-1/3">
                 <div className="p-1">
                   <Card className="overflow-hidden border-none shadow-md hover:shadow-xl transition-shadow duration-300">
@@ -123,7 +84,7 @@ export function FeaturedCars() {
                         </div>
                         <div className="flex items-center gap-1">
                           <Fuel className="h-4 w-4" />
-                          <span>{car.fuel}</span>
+                          <span>{car.fuel_type || 'N/A'}</span>
                         </div>
                       </div>
                     </CardContent>
