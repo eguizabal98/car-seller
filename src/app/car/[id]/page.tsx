@@ -148,10 +148,7 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
                         <MessageCircle className="mr-2 h-5 w-5" />
                         Chat with Sales
                     </Button>
-                    <Button variant="outline" className="w-full h-12" size="lg">
-                        <CalendarCheck className="mr-2 h-5 w-5" />
-                        Schedule Test Drive
-                    </Button>
+                    <BookingModal vehicleId={car.id} vehicleTitle={`${car.make} ${car.model}`} />
                     <div className="grid grid-cols-2 gap-3 pt-2">
                          <Button variant="ghost" className="w-full">
                             <Share2 className="mr-2 h-4 w-4" />

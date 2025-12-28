@@ -87,9 +87,9 @@ This document outlines the step-by-step plan to build the High-End Second-Hand C
     - Sitemap generation.
 
 ## Phase 8: Testing & Deployment
-- [ ] **Quality Assurance**
+- [x] **Quality Assurance**
     - [x] Linting & Type checking.
-    - [ ] End-to-End testing flow (Listing -> Booking).
+    - [x] End-to-End testing flow (Listing -> Booking).
 - [ ] **Deployment**
-    - Deploy to Vercel.
-    - Verify Supabase production connections.
+    - [x] Deploy to Vercel (Prepared).
+    - [ ] Verify Supabase production connections.
