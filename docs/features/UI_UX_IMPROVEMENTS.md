@@ -79,8 +79,10 @@ This document outlines a comprehensive plan to review and improve the responsive
     - Content should be scrollable if it exceeds viewport height (especially on landscape mobile).
 
 ## 4. Technical & Performance
-- [ ] **CLS (Cumulative Layout Shift)**: Add width/height attributes or aspect-ratio classes to all images.
-- [ ] **Loading States**: Add Skeleton loaders for data-fetching components (Car Details, Inventory).
+- [x] **CLS (Cumulative Layout Shift)**: Add width/height attributes or aspect-ratio classes to all images.
+    - Implemented `next/image` in `CarCard` and `MediaGallery`.
+- [x] **Loading States**: Add Skeleton loaders for data-fetching components (Car Details, Inventory).
+    - Added `loading.tsx` for `/buy` and `/car/[id]`.
 
 ## 5. Action Plan
 1.  **Audit**: Run the app locally (`npm run dev`) and inspect with Chrome DevTools Device Mode (iPhone SE, iPad Air, Desktop).
@@ -88,3 +90,4 @@ This document outlines a comprehensive plan to review and improve the responsive
 3.  **Component Refactor**: Iterate through Navbar, Hero, and Cards first.
 4.  **Mobile UX Polish**: Fix the "Hover-only" compare button issue.
 5.  **Verification**: Test critical flows (Search -> View Car -> Compare -> Contact).
+    - **Status**: E2E tests passed for all core flows.

@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import * as React from 'react'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import {
@@ -134,7 +135,7 @@ export function MediaGallery({ media }: MediaGalleryProps) {
                     className="h-full w-full object-cover"
                   />
                   {item.type === 'video_url' && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 z-10">
                       <Play className="h-6 w-6 text-white fill-current" />
                     </div>
                   )}
