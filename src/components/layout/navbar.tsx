@@ -18,9 +18,11 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { createClient } from '@/utils/supabase/client'
 import { useEffect, useState } from 'react'
 import { User as SupabaseUser } from '@supabase/supabase-js'
+import { USER_ROLES, type UserRole } from '@/lib/constants'
 
 export function Navbar() {
   const [user, setUser] = useState<SupabaseUser | null>(null)
+  const [role, setRole] = useState<UserRole | null>(null)
   const supabase = createClient()
   const router = useRouter()
 
@@ -30,12 +32,38 @@ export function Navbar() {
         data: { user },
       } = await supabase.auth.getUser()
       setUser(user)
+
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+        
+        if (profile) {
+          setRole(profile.role as UserRole)
+        }
+      }
     }
     getUser()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (_event, session) => {
         setUser(session?.user ?? null)
+        
+        if (session?.user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single()
+          
+          if (profile) {
+            setRole(profile.role as UserRole)
+          }
+        } else {
+          setRole(null)
+        }
       }
     )
 
@@ -92,6 +120,11 @@ export function Navbar() {
                                 <span className="text-xs text-muted-foreground">{user.email}</span>
                         </div>
                     </div>
+                    {(role === USER_ROLES.ADMIN || role === USER_ROLES.STAFF) && (
+                      <Button variant="ghost" asChild className="w-full justify-start">
+                        <Link href="/admin/inventory">Admin Panel</Link>
+                      </Button>
+                    )}
                     <Button variant="ghost" asChild className="w-full justify-start">
                         <Link href="/profile">Profile</Link>
                     </Button>
@@ -166,6 +199,14 @@ export function Navbar() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                {(role === USER_ROLES.ADMIN || role === USER_ROLES.STAFF) && (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin/inventory">Admin Panel</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
                 <DropdownMenuItem asChild>
                   <Link href="/profile">Profile</Link>
                 </DropdownMenuItem>

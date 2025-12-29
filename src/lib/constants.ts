@@ -1,3 +1,11 @@
+export const USER_ROLES = {
+  ADMIN: 'admin',
+  STAFF: 'staff',
+  USER: 'user',
+} as const;
+
+export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
+
 // Constants for images used across the application
 export const IMAGES = {
   // Use a reliable placeholder service or Supabase Storage URL
