@@ -9,9 +9,10 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Edit, Plus, Trash2 } from 'lucide-react'
+import { Edit, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { FeaturedToggle } from './featured-toggle'
+import { DeleteVehicleButton } from './delete-vehicle-button'
 
 export default async function InventoryPage() {
   const supabase = await createClient()
@@ -74,9 +75,7 @@ export default async function InventoryPage() {
                         <Edit className="h-4 w-4" />
                       </Link>
                     </Button>
-                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <DeleteVehicleButton id={vehicle.id} />
                   </div>
                 </TableCell>
               </TableRow>
