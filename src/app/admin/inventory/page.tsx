@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Edit, Plus, Trash2 } from 'lucide-react'
 import Link from 'next/link'
-import { Switch } from '@/components/ui/switch'
+import { FeaturedToggle } from './featured-toggle'
 
 export default async function InventoryPage() {
   const supabase = await createClient()
@@ -65,8 +65,7 @@ export default async function InventoryPage() {
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  {/* Mock Switch for now, would need client component for interactivity */}
-                  <Switch checked={vehicle.is_featured} disabled />
+                  <FeaturedToggle id={vehicle.id} initialIsFeatured={vehicle.is_featured} />
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">

@@ -64,14 +64,15 @@ This document outlines the files containing hardcoded data and the tasks require
     *   Replaced hardcoded strings in `CarCard` and `BuyPage` with `IMAGES` constants.
     *   This prepares the codebase for easy switching to real Supabase Storage URLs later.
 
-## 7. Admin Inventory Management
+## 7. Admin Inventory Management (Completed)
 
 **File:** `src/app/admin/inventory/page.tsx`
 
-*   **Current State:** The "Featured" switch is disabled and commented as "Mock Switch".
-*   **Task:**
-    *   Create a client component (e.g., `FeaturedToggle`) to handle the switch interactivity.
-    *   Implement a server action or API call to update the `is_featured` column in Supabase when toggled.
+*   **Status:** ✅ Completed
+*   **Changes:**
+    *   Created `toggleVehicleFeatured` server action to update Supabase.
+    *   Created `FeaturedToggle` client component with optimistic updates.
+    *   Integrated the toggle into the inventory table, enabling real-time status updates.
 
 ---
 
