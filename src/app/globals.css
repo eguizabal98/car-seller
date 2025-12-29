@@ -140,6 +140,10 @@
   p {
     @apply leading-relaxed;
   }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--header-height, 5rem);
+  }
 }
 
 /* Custom Container Utility */

@@ -144,6 +144,8 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
                     {car.description || "Experience the pinnacle of automotive engineering with this exceptional vehicle. Meticulously maintained and finished in a stunning color combination, it represents the perfect blend of performance and luxury. Features include premium leather upholstery, advanced navigation system, and a suite of driver assistance technologies."}
                 </p>
             </div>
+
+            <DigitalLogbook vehicleId={car.id} />
         </div>
 
         {/* Right Column: CTA & Logbook */}
@@ -171,8 +173,6 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
                 {/* Finance Calculator Integrated */}
                 <FinanceCalculator vehiclePrice={car.price} />
             </div>
-
-            <DigitalLogbook vehicleId={car.id} />
         </div>
       </div>
     </div>
