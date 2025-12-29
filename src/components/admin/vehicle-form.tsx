@@ -26,7 +26,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { updateVehicle } from '@/app/admin/inventory/actions'
+import { updateVehicle, createVehicle } from '@/app/admin/inventory/actions'
+import { MediaUploader, MediaItem } from '@/components/admin/media-uploader'
 
 const vehicleSchema = z.object({
   make: z.string().min(1, 'Make is required'),
@@ -60,31 +61,41 @@ const vehicleSchema = z.object({
 type VehicleFormValues = z.infer<typeof vehicleSchema>
 
 interface VehicleFormProps {
-  vehicle: any
+  vehicle?: any
 }
 
 export function VehicleForm({ vehicle }: VehicleFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   
-  const features = (vehicle.features as Record<string, any>) || {}
+  const features = (vehicle?.features as Record<string, any>) || {}
   const amenitiesList = (features.amenities as string[]) || []
+
+  const [media, setMedia] = useState<MediaItem[]>(
+    (vehicle?.media as any[])?.map(m => ({
+      id: m.id,
+      url: m.url,
+      type: m.type as 'image' | 'video',
+      is_primary: m.is_primary || false,
+      caption: m.caption || ''
+    })) || []
+  )
 
   // Cast default values to avoid type mismatch with enum/optional fields
   const defaultValues: Partial<VehicleFormValues> = {
-    make: vehicle.make || '',
-    model: vehicle.model || '',
-    year: vehicle.year || new Date().getFullYear(),
-    price: vehicle.price || 0,
-    status: (vehicle.status as "available" | "sold" | "reserved") || 'available',
-    mileage: vehicle.mileage || 0,
-    color: vehicle.color || '',
-    transmission: vehicle.transmission || '',
-    fuel_type: vehicle.fuel_type || '',
-    body_type: vehicle.body_type || '',
-    owners: vehicle.owners || 1,
-    vin: vehicle.vin || '',
-    description: vehicle.description || '',
+    make: vehicle?.make || '',
+    model: vehicle?.model || '',
+    year: vehicle?.year || new Date().getFullYear(),
+    price: vehicle?.price || 0,
+    status: (vehicle?.status as "available" | "sold" | "reserved") || 'available',
+    mileage: vehicle?.mileage || 0,
+    color: vehicle?.color || '',
+    transmission: vehicle?.transmission || '',
+    fuel_type: vehicle?.fuel_type || '',
+    body_type: vehicle?.body_type || '',
+    owners: vehicle?.owners || 1,
+    vin: vehicle?.vin || '',
+    description: vehicle?.description || '',
     // Features
     engine: features.engine || '',
     drivetrain: features.drivetrain || '',
@@ -130,7 +141,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
         : []
 
       const features = {
-        ...(vehicle.features as object || {}),
+        ...(vehicle?.features as object || {}),
         engine,
         drivetrain,
         interior_color,
@@ -144,16 +155,26 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
         inspection_report_url
       }
 
-      await updateVehicle(vehicle.id, {
-        ...standardData,
-        features
-      })
+      if (vehicle) {
+        await updateVehicle(vehicle.id, {
+          ...standardData,
+          features,
+          media
+        })
+        toast.success('Vehicle updated successfully')
+      } else {
+        await createVehicle({
+          ...standardData,
+          features,
+          media
+        })
+        toast.success('Vehicle created successfully')
+      }
       
-      toast.success('Vehicle updated successfully')
       router.push('/admin/inventory')
     } catch (error) {
-      console.error('Error updating vehicle:', error)
-      toast.error('Failed to update vehicle')
+      console.error('Error saving vehicle:', error)
+      toast.error('Failed to save vehicle')
     } finally {
       setIsSubmitting(false)
     }
@@ -465,6 +486,14 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
           </div>
         </div>
 
+        <div className="space-y-4">
+          <MediaUploader 
+            initialMedia={media} 
+            onChange={setMedia} 
+            vehicleId={vehicle?.id}
+          />
+        </div>
+
         <FormField
           control={form.control}
           name="amenities"
@@ -513,7 +542,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Update Vehicle
+            {vehicle ? 'Update Vehicle' : 'Create Vehicle'}
           </Button>
         </div>
       </form>

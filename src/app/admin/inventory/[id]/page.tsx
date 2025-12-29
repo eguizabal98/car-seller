@@ -12,7 +12,7 @@ export default async function EditVehiclePage({ params }: PageProps) {
 
   const { data: vehicle, error } = await supabase
     .from('vehicles')
-    .select('*')
+    .select('*, media(*)')
     .eq('id', id)
     .single()
 
