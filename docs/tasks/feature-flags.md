@@ -80,12 +80,12 @@ This checklist tracks the implementation of the Feature Flags system as defined 
 
 ## Phase 6: Verification & Cleanup
 
-- [ ] **6.1. Manual Testing**
-    - [ ] Verify Admin can toggle all flags.
-    - [ ] Verify Navbar links disappear/appear immediately.
-    - [ ] Verify direct URL access throws 404 when disabled.
-    - [ ] Verify Finance Calculator hides when Finance is disabled.
+- [x] **6.1. Manual Testing**
+    - [x] Verify Admin can toggle all flags.
+    - [x] Verify Navbar links disappear/appear immediately.
+    - [x] Verify direct URL access throws 404 when disabled.
+    - [x] Verify Finance Calculator hides when Finance is disabled.
 
-- [ ] **6.2. Code Quality**
-    - [ ] Run `npm run lint`.
-    - [ ] Ensure types are strict.
+- [x] **6.2. Code Quality**
+    - [x] Run `npm run lint`.
+    - [x] Ensure types are strict.

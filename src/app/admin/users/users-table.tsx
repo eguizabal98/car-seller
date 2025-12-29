@@ -15,12 +15,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { USER_ROLES, type UserRole } from '@/lib/constants'
 import { updateUserRole } from './actions'
 import { toast } from 'sonner'
-import { useState, useTransition } from 'react'
+import { useTransition } from 'react'
 
 type Profile = {
   id: string

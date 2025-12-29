@@ -26,7 +26,7 @@ export async function getProfile() {
   return { ...profile, email: user.email }
 }
 
-export async function updateProfile(prevState: any, formData: FormData) {
+export async function updateProfile(formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -36,51 +36,52 @@ export async function updateProfile(prevState: any, formData: FormData) {
 
   const fullName = formData.get('fullName') as string
   const phoneNumber = formData.get('phoneNumber') as string
-  const avatarFile = formData.get('avatar') as File | null
+  const avatarFile = formData.get('avatar') as File
 
-  let avatarUrl = null
+  let avatarUrl = user.user_metadata.avatar_url
 
   if (avatarFile && avatarFile.size > 0) {
     const fileExt = avatarFile.name.split('.').pop()
-    const fileName = `${user.id}-${Date.now()}.${fileExt}`
-
+    const fileName = `${user.id}-${Math.random()}.${fileExt}`
     const { error: uploadError } = await supabase.storage
       .from('avatars')
-      .upload(fileName, avatarFile, {
-        upsert: true
-      })
+      .upload(fileName, avatarFile)
 
     if (uploadError) {
       console.error('Error uploading avatar:', uploadError)
-      return { message: 'Failed to upload avatar', type: 'error' }
+      // return { error: 'Failed to upload avatar' }
+    } else {
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName)
+      avatarUrl = publicUrl
     }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('avatars')
-      .getPublicUrl(fileName)
-
-    avatarUrl = publicUrl
-  }
-
-  const updates: any = {
-    full_name: fullName,
-    phone_number: phoneNumber,
-  }
-
-  if (avatarUrl) {
-    updates.avatar_url = avatarUrl
   }
 
   const { error } = await supabase
     .from('profiles')
-    .update(updates)
+    .update({
+      full_name: fullName,
+      phone_number: phoneNumber,
+      avatar_url: avatarUrl,
+      updated_at: new Date().toISOString(),
+    })
     .eq('id', user.id)
 
   if (error) {
-    return { message: 'Failed to update profile', type: 'error' }
+    console.error('Error updating profile:', error)
+    return { error: 'Failed to update profile' }
   }
 
+  // Update auth user metadata as well to keep in sync
+  await supabase.auth.updateUser({
+    data: {
+      full_name: fullName,
+      avatar_url: avatarUrl,
+    }
+  })
+
   revalidatePath('/profile')
-  revalidatePath('/', 'layout') // Update navbar avatar
-  return { message: 'Profile updated successfully', type: 'success' }
+  revalidatePath('/') // Update navbar
+  return { success: 'Profile updated successfully' }
 }

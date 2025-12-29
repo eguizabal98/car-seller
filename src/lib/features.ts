@@ -1,21 +1,21 @@
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@supabase/supabase-js';
 import { unstable_cache } from 'next/cache';
+import { Database } from '@/types/supabase';
 
-export type FeatureFlag = {
-  key: string;
-  is_enabled: boolean;
-  description: string;
-};
+export type FeatureFlag = Database['public']['Tables']['feature_flags']['Row'];
 
 export const getFeatureFlags = unstable_cache(
   async () => {
-    const supabase = await createClient();
+    const supabase = createClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
     const { data, error } = await supabase.from('feature_flags').select('*');
     if (error) {
       console.error('Error fetching feature flags:', error);
       return [];
     }
-    return data as FeatureFlag[];
+    return data;
   },
   ['feature-flags'],
   { tags: ['feature-flags'], revalidate: 3600 }

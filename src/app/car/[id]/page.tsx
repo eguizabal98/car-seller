@@ -7,10 +7,15 @@ import { FinanceCalculator } from '@/components/tools/finance-calculator'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { MessageCircle, CalendarCheck, Share2, Heart } from 'lucide-react'
+import { MessageCircle, Share2, Heart } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { Metadata, ResolvingMetadata } from 'next'
 import { isFeatureEnabled } from '@/lib/features'
+import { Database } from '@/types/supabase'
+
+type VehicleWithMedia = Database['public']['Tables']['vehicles']['Row'] & {
+  media: Database['public']['Tables']['media']['Row'][]
+}
 
 // Define params type as a Promise
 type Params = Promise<{ id: string }>
@@ -32,7 +37,7 @@ async function getCar(id: string) {
       description: 'This is a mock vehicle for testing purposes.',
       owners: 1,
       media: [],
-    }
+    } as unknown as VehicleWithMedia
   }
 
   const supabase = await createClient()
@@ -45,7 +50,7 @@ async function getCar(id: string) {
   if (error || !car) {
     return null
   }
-  return car
+  return car as unknown as VehicleWithMedia
 }
 
 export async function generateMetadata(
@@ -66,7 +71,7 @@ export async function generateMetadata(
   const description = car.description || `Explore this ${car.year} ${car.make} ${car.model}. Price: $${car.price.toLocaleString()}.`
   
   // Find primary image or use first one
-  const primaryImage = car.media?.find((m: any) => m.is_primary) || car.media?.[0]
+  const primaryImage = car.media?.find((m) => m.is_primary) || car.media?.[0]
   const imageUrl = primaryImage?.url || `https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent(`${car.make} ${car.model} luxury car`)}&image_size=landscape_16_9`
 
   return {
@@ -94,11 +99,11 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
 
   // Map fetched media to the format expected by MediaGallery
   // If no media is found, fallback to placeholder logic (optional, but good for MVP)
-  let media = (car.media || []).map((m: any) => ({
+  let media = (car.media || []).map((m) => ({
     id: m.id,
     url: m.url,
     type: m.type === '360_view' ? 'image' : m.type, // Handle 360 view if component doesn't support it yet
-    thumbnail: m.metadata?.thumbnail
+    thumbnail: m.metadata && typeof m.metadata === 'object' && 'thumbnail' in m.metadata ? (m.metadata as { thumbnail: string }).thumbnail : undefined
   }))
 
   if (media.length === 0) {

@@ -27,81 +27,69 @@ export function ChatWidget() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
 
-  const initializeChat = async (userId: string) => {
-    setIsLoading(true)
-    // 1. Check if user already has a room (Simplified: 1 user = 1 room with support)
-    // In a real app, you'd find a room where user is a participant
-    
-    // For MVP, let's try to find a room or create one
-    // Note: Complex query needed here, for now let's just create a room if we don't store it in local state
-    // Or better, fetch the most recent room the user is in.
-    
-    // Simplified: Just fetch messages from a 'demo' room concept or creates one
-    // Let's create a room for the user if they don't have one active
-    
-    // Fetch room where user is participant
-    const { data: participants } = await supabase
-        .from('chat_participants')
-        .select('room_id')
-        .eq('user_id', userId)
-        .limit(1)
-        .single()
-
-    let currentRoomId = participants?.room_id
-
-    if (!currentRoomId) {
-        // Create new room
-        const { data: room, error: roomError } = await supabase
-            .from('chat_rooms')
-            .insert({})
-            .select()
-            .single()
-        
-        if (room) {
-            currentRoomId = room.id
-            // Add user to room
-            await supabase.from('chat_participants').insert({
-                room_id: currentRoomId,
-                user_id: userId
-            })
-            // Add 'support' agent to room (mocked/manual process in real app)
-        }
-    }
-
-    setRoomId(currentRoomId)
-    
-    if (currentRoomId) {
-        // Fetch existing messages
-        const { data: msgs } = await supabase
-            .from('messages')
-            .select('*')
-            .eq('room_id', currentRoomId)
-            .order('created_at', { ascending: true })
-        
-        if (msgs) setMessages(msgs)
-
-        // Subscribe to new messages
-        const channel = supabase
-            .channel(`room:${currentRoomId}`)
-            .on('postgres_changes', {
-                event: 'INSERT',
-                schema: 'public',
-                table: 'messages',
-                filter: `room_id=eq.${currentRoomId}`
-            }, (payload) => {
-                const newMsg = payload.new as Message
-                setMessages((prev) => [...prev, newMsg])
-            })
-            .subscribe()
-        
-        return () => {
-            supabase.removeChannel(channel)
-        }
-    }
-    setIsLoading(false)
-  }
-
   useEffect(() => {
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
+    const initializeChat = async (userId: string) => {
+      setIsLoading(true)
+      
+      // Fetch room where user is participant
+      const { data: participants } = await supabase
+          .from('chat_participants')
+          .select('room_id')
+          .eq('user_id', userId)
+          .limit(1)
+          .single()
+  
+      let currentRoomId = participants?.room_id
+  
+      if (!currentRoomId) {
+          // Create new room
+          const { data: room } = await supabase
+              .from('chat_rooms')
+              .insert({})
+              .select()
+              .single()
+          
+          if (room) {
+              currentRoomId = room.id
+              // Add user to room
+              await supabase.from('chat_participants').insert({
+                  room_id: currentRoomId,
+                  user_id: userId
+              })
+          }
+      }
+  
+      setRoomId(currentRoomId)
+      
+      if (currentRoomId) {
+          // Fetch existing messages
+          const { data: msgs } = await supabase
+              .from('messages')
+              .select('*')
+              .eq('room_id', currentRoomId)
+              .order('created_at', { ascending: true })
+          
+          if (msgs) setMessages(msgs)
+  
+          // Subscribe to new messages
+          channel = supabase
+              .channel(`room:${currentRoomId}`)
+              .on('postgres_changes', {
+                  event: 'INSERT',
+                  schema: 'public',
+                  table: 'messages',
+                  filter: `room_id=eq.${currentRoomId}`
+              }, (payload) => {
+                  const newMsg = payload.new as Message
+                  setMessages((prev) => [...prev, newMsg])
+              })
+              .subscribe()
+      }
+      setIsLoading(false)
+    }
+
     // Check auth
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
@@ -111,7 +99,11 @@ export function ChatWidget() {
       }
     }
     getUser()
-  }, [])
+
+    return () => {
+      if (channel) supabase.removeChannel(channel)
+    }
+  }, []) // Remove supabase from dependency array to avoid "changed size" error if client is recreated
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
