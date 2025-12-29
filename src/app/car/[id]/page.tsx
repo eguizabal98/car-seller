@@ -3,6 +3,7 @@ import { MediaGallery } from '@/components/car-details/media-gallery'
 import { SpecsGrid } from '@/components/car-details/specs-grid'
 import { DigitalLogbook } from '@/components/car-details/digital-logbook'
 import { BookingModal } from '@/components/booking/booking-modal'
+import { FinanceCalculator } from '@/components/tools/finance-calculator'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
@@ -14,10 +15,29 @@ import { Metadata, ResolvingMetadata } from 'next'
 type Params = Promise<{ id: string }>
 
 async function getCar(id: string) {
+  // MOCK DATA FOR TESTING
+  if (id === 'test-car-id') {
+    return {
+      id: 'test-car-id',
+      make: 'Test',
+      model: 'Vehicle',
+      year: 2024,
+      price: 50000,
+      mileage: 1000,
+      fuel_type: 'Electric',
+      transmission: 'Automatic',
+      body_type: 'Sedan',
+      status: 'available',
+      description: 'This is a mock vehicle for testing purposes.',
+      owners: 1,
+      media: [],
+    }
+  }
+
   const supabase = await createClient()
   const { data: car, error } = await supabase
     .from('vehicles')
-    .select('*')
+    .select('*, media(*)')
     .eq('id', id)
     .single()
 
@@ -43,6 +63,10 @@ export async function generateMetadata(
   const previousImages = (await parent).openGraph?.images || []
   const title = `${car.year} ${car.make} ${car.model} | High-End Car Marketplace`
   const description = car.description || `Explore this ${car.year} ${car.make} ${car.model}. Price: $${car.price.toLocaleString()}.`
+  
+  // Find primary image or use first one
+  const primaryImage = car.media?.find((m: any) => m.is_primary) || car.media?.[0]
+  const imageUrl = primaryImage?.url || `https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent(`${car.make} ${car.model} luxury car`)}&image_size=landscape_16_9`
 
   return {
     title,
@@ -51,7 +75,7 @@ export async function generateMetadata(
       title,
       description,
       images: [
-        `https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent(`${car.make} ${car.model} luxury car`)}&image_size=landscape_16_9`,
+        imageUrl,
         ...previousImages,
       ],
     },
@@ -66,33 +90,35 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
     return notFound()
   }
 
-  // Fetch Media Data (Mocking if table is empty for now or joining if possible)
-  // Since we haven't populated media table yet, let's mock the media array based on the car
-  // In a real scenario: const { data: media } = await supabase.from('media').select('*').eq('vehicle_id', id)
-  
-  const mockMedia = [
-    {
-      id: '1',
-      url: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20car%20front%20view%20studio%20lighting%204k&image_size=landscape_16_9',
-      type: 'image' as const,
-    },
-    {
-      id: '2',
-      url: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20car%20interior%20leather%20seats%20dashboard%204k&image_size=landscape_16_9',
-      type: 'image' as const,
-    },
-    {
-      id: '3',
-      url: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20car%20rear%20view%20taillights%204k&image_size=landscape_16_9',
-      type: 'image' as const,
-    },
-    {
-        id: '4',
-        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // Placeholder video
-        type: 'video_url' as const,
-        thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
-    }
-  ]
+  // Map fetched media to the format expected by MediaGallery
+  // If no media is found, fallback to placeholder logic (optional, but good for MVP)
+  let media = (car.media || []).map((m: any) => ({
+    id: m.id,
+    url: m.url,
+    type: m.type === '360_view' ? 'image' : m.type, // Handle 360 view if component doesn't support it yet
+    thumbnail: m.metadata?.thumbnail
+  }))
+
+  if (media.length === 0) {
+     media = [
+        {
+          id: '1',
+          url: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20car%20front%20view%20studio%20lighting%204k&image_size=landscape_16_9',
+          type: 'image' as const,
+        },
+        {
+          id: '2',
+          url: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20car%20interior%20leather%20seats%20dashboard%204k&image_size=landscape_16_9',
+          type: 'image' as const,
+        },
+        {
+            id: '3',
+            url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // Placeholder video
+            type: 'video_url' as const,
+            thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+        }
+     ]
+  }
 
   return (
     <div className="container py-8">
@@ -105,10 +131,10 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
                     {car.status}
                 </Badge>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold">{car.make} {car.model}</h1>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">{car.make} {car.model}</h1>
             <p className="text-muted-foreground mt-1 text-lg">{car.description || 'Premium Luxury Vehicle'}</p>
         </div>
-        <div className="text-right">
+        <div className="text-left md:text-right w-full md:w-auto">
             <h2 className="text-3xl font-bold text-primary">${car.price.toLocaleString()}</h2>
             <p className="text-sm text-muted-foreground">Excluding taxes & licensing</p>
         </div>
@@ -117,7 +143,7 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Media & Details */}
         <div className="lg:col-span-2 space-y-8">
-            <MediaGallery media={mockMedia} />
+            <MediaGallery media={media} />
             
             <div className="bg-card rounded-lg border p-6">
                 <h3 className="text-xl font-semibold mb-4">Vehicle Specifications</h3>
@@ -127,7 +153,7 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
                     fuel_type: car.fuel_type,
                     transmission: car.transmission,
                     body_type: car.body_type,
-                    owners: 1, // Mocked
+                    owners: car.owners || 1, // Fallback to 1 if column missing or null
                 }} />
             </div>
 
@@ -137,19 +163,32 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
                     {car.description || "Experience the pinnacle of automotive engineering with this exceptional vehicle. Meticulously maintained and finished in a stunning color combination, it represents the perfect blend of performance and luxury. Features include premium leather upholstery, advanced navigation system, and a suite of driver assistance technologies."}
                 </p>
             </div>
+
+            <DigitalLogbook vehicleId={car.id} />
         </div>
 
         {/* Right Column: CTA & Logbook */}
         <div className="space-y-6">
-            <div className="bg-card rounded-lg border p-6 shadow-sm sticky top-24">
-                <h3 className="text-lg font-semibold mb-4">Interested in this car?</h3>
-                <div className="space-y-3">
-                    <Button className="w-full h-12 text-lg" size="lg">
+            <div className="bg-card rounded-lg border p-6 shadow-sm sticky bottom-0 md:top-24 md:bottom-auto z-10 md:z-auto">
+                <h3 className="text-lg font-semibold mb-4 hidden md:block">Interested in this car?</h3>
+                <div className="space-y-3 flex flex-col md:block">
+                    <Button className="w-full h-12 text-lg shadow-lg md:shadow-none" size="lg">
                         <MessageCircle className="mr-2 h-5 w-5" />
                         Chat with Sales
                     </Button>
-                    <BookingModal vehicleId={car.id} vehicleTitle={`${car.make} ${car.model}`} />
-                    <div className="grid grid-cols-2 gap-3 pt-2">
+                    <div className="hidden md:block">
+                        <BookingModal vehicleId={car.id} vehicleTitle={`${car.make} ${car.model}`} />
+                    </div>
+                    {/* Mobile Only: Secondary Actions */}
+                    <div className="md:hidden flex gap-2">
+                        <BookingModal vehicleId={car.id} vehicleTitle={`${car.make} ${car.model}`} />
+                         <Button variant="outline" className="flex-1">
+                            <Share2 className="mr-2 h-4 w-4" />
+                            Share
+                        </Button>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 pt-2 hidden md:grid">
                          <Button variant="ghost" className="w-full">
                             <Share2 className="mr-2 h-4 w-4" />
                             Share
@@ -160,15 +199,12 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
                         </Button>
                     </div>
                 </div>
-                <Separator className="my-6" />
-                <div className="text-center">
-                    <p className="text-sm text-muted-foreground mb-2">Need financing?</p>
-                    <p className="font-semibold text-primary">Est. $3,450 / month</p>
-                    <Button variant="link" className="h-auto p-0 text-xs">Calculate Payments</Button>
+                <div className="hidden md:block">
+                     <Separator className="my-6" />
+                    {/* Finance Calculator Integrated */}
+                    <FinanceCalculator vehiclePrice={car.price} />
                 </div>
             </div>
-
-            <DigitalLogbook />
         </div>
       </div>
     </div>

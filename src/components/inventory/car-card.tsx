@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { Fuel, Gauge, Calendar, Plus, Check } from 'lucide-react'
 import { useComparisonStore } from '@/store/comparison-store'
 import { toast } from 'sonner'
+import { IMAGES } from '@/lib/constants'
 
 export interface Car {
   id: string
@@ -19,6 +20,8 @@ export interface Car {
   image: string
   status: string
 }
+
+import Image from 'next/image'
 
 export function CarCard({ car }: { car: Car }) {
   const { addCar, cars, removeCar } = useComparisonStore()
@@ -43,22 +46,23 @@ export function CarCard({ car }: { car: Car }) {
 
   return (
     <Card className="overflow-hidden border-none shadow-md hover:shadow-xl transition-shadow duration-300 group">
-      <div className="aspect-[4/3] relative overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img 
-          src={car.image || 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20car%20placeholder%20studio%20lighting&image_size=landscape_4_3'} 
+      <div className="aspect-[4/3] relative overflow-hidden bg-muted">
+        <Image
+          src={car.image || IMAGES.PLACEHOLDER_CAR}
           alt={`${car.make} ${car.model}`}
+          fill
           className="object-cover w-full h-full hover:scale-105 transition-transform duration-500"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
-        <div className="absolute top-2 right-2">
-          <Badge variant={car.status === 'available' ? 'default' : 'secondary'} className="uppercase tracking-wider">
+        <div className="absolute top-2 right-2 z-10">
+          <Badge variant={car.status === 'available' ? 'default' : 'secondary'} className="uppercase tracking-wider shadow-sm">
             {car.status}
           </Badge>
         </div>
         <Button
             size="sm"
             variant={isSelected ? "default" : "secondary"}
-            className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute top-2 left-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity opacity-100 shadow-sm"
             onClick={toggleCompare}
         >
             {isSelected ? <Check className="h-4 w-4 mr-1" /> : <Plus className="h-4 w-4 mr-1" />}

@@ -65,7 +65,7 @@ export function Footer() {
           </div>
         </div>
         <Separator className="my-8" />
-        <div className="flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
+        <div className="flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground text-center md:text-left">
           <p>© {new Date().getFullYear()} CarSeller. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <Link href="/privacy" className="hover:text-foreground">Privacy</Link>

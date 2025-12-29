@@ -40,13 +40,13 @@ import { toast } from 'sonner'
 
 const formSchema = z.object({
   date: z.date({
-    required_error: 'A date is required.',
+    message: 'A date is required.',
   }),
   timeSlot: z.string({
-    required_error: 'Please select a time slot.',
+    message: 'Please select a time slot.',
   }),
   type: z.enum(['test_drive', 'video_walkthrough'], {
-    required_error: 'Please select a booking type.',
+    message: 'Please select a booking type.',
   }),
   notes: z.string().optional(),
 })
@@ -111,7 +111,7 @@ export function BookingModal({ vehicleId, vehicleTitle }: BookingModalProps) {
           Schedule Test Drive
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Book an Appointment</DialogTitle>
           <DialogDescription>
