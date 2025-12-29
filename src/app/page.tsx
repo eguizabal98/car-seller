@@ -7,6 +7,7 @@ import { Database } from '@/types/supabase'
 
 type VehicleWithMedia = Database['public']['Tables']['vehicles']['Row'] & {
   media: Database['public']['Tables']['media']['Row'][]
+  image?: string // Add optional image property for compatibility with Car type
 }
 
 // Mock data for featured cars (replace with DB fetch later)
@@ -30,6 +31,7 @@ const MOCK_FEATURED_CARS: VehicleWithMedia[] = [
     vin: null,
     color: 'GT Silver',
     owners: 1,
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Porsche%20911%20GT3%20silver%20track%20day%204k&image_size=landscape_16_9',
     media: [
         {
             id: 'm1',
@@ -62,6 +64,7 @@ const MOCK_FEATURED_CARS: VehicleWithMedia[] = [
     vin: null,
     color: 'Obsidian Black',
     owners: 1,
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Mercedes%20G63%20AMG%20black%20matte%20urban%20setting%204k&image_size=landscape_16_9',
     media: [
         {
             id: 'm2',
@@ -94,6 +97,7 @@ const MOCK_FEATURED_CARS: VehicleWithMedia[] = [
     vin: null,
     color: 'Red Multi-Coat',
     owners: 1,
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Tesla%20Model%20S%20Plaid%20red%20highway%20driving%204k&image_size=landscape_16_9',
     media: [
         {
             id: 'm3',
@@ -192,7 +196,7 @@ export default async function Home() {
             )}
           </div>
           
-          <FeaturedCars cars={MOCK_FEATURED_CARS} />
+          <FeaturedCars cars={MOCK_FEATURED_CARS as any[]} />
         </div>
       </section>
     </div>

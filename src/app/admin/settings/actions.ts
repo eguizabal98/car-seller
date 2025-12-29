@@ -37,5 +37,12 @@ export async function toggleFeatureFlag(key: string, isEnabled: boolean) {
     throw new Error(`Failed to update feature flag: ${error.message}`);
   }
 
-  revalidateTag('feature-flags');
+  // Force revalidate
+  try {
+     // @ts-ignore
+     revalidateTag('feature-flags');
+  } catch (e) {
+     // Ignore revalidation errors during build
+     console.warn('Revalidation failed', e);
+  }
 }

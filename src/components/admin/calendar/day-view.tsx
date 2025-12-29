@@ -22,11 +22,11 @@ export function DayView({ currentDate, bookings, onBookingClick }: DayViewProps)
   return (
     <div className="flex flex-col h-full overflow-auto bg-background">
       {/* Header */}
-      <div className="p-4 border-b text-center font-semibold sticky top-0 bg-background z-10">
+      <div className="p-4 border-b text-center font-semibold sticky top-0 bg-background z-10 shadow-sm">
         {format(currentDate, 'EEEE, MMMM d, yyyy')}
       </div>
 
-      <div className="flex-1 relative min-w-[600px]">
+      <div className="flex-1 relative min-w-[300px] md:min-w-[600px]">
         {hours.map((hour) => {
           // Find bookings for this hour
           // Assuming time_slot is in "HH:mm" or "HH:mm:ss" 24h format
@@ -41,14 +41,14 @@ export function DayView({ currentDate, bookings, onBookingClick }: DayViewProps)
           return (
             <div key={hour} className="flex border-b min-h-[100px] group">
               {/* Time Label */}
-              <div className="w-20 p-4 border-r text-sm text-muted-foreground font-medium sticky left-0 bg-background">
+              <div className="w-16 md:w-20 p-2 md:p-4 border-r text-xs md:text-sm text-muted-foreground font-medium sticky left-0 bg-background flex items-start justify-center pt-4">
                 {format(new Date().setHours(hour, 0), 'h aa')}
               </div>
 
               {/* Events Area */}
               <div className="flex-1 p-2 flex flex-col gap-2 transition-colors group-hover:bg-muted/10">
                 {hourBookings.map((booking) => (
-                  <div key={booking.id} className="max-w-md">
+                  <div key={booking.id} className="max-w-full md:max-w-md">
                     <BookingEventCard
                       booking={booking}
                       onClick={onBookingClick}

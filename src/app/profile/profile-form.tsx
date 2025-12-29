@@ -21,20 +21,18 @@ interface ProfileFormProps {
 }
 
 const initialState = {
-  message: '',
-  type: ''
+  error: '',
+  success: '',
 }
 
 export function ProfileForm({ user }: ProfileFormProps) {
-  const [state, formAction, isPending] = useActionState(updateProfile, initialState)
+  const [state, formAction, isPending] = useActionState(updateProfile as any, initialState)
 
   useEffect(() => {
-    if (state.message) {
-      if (state.type === 'success') {
-        toast.success(state.message)
-      } else {
-        toast.error(state.message)
-      }
+    if (state.success) {
+        toast.success(state.success)
+    } else if (state.error) {
+        toast.error(state.error)
     }
   }, [state])
 

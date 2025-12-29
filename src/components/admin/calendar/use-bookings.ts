@@ -1,4 +1,4 @@
-import { createBrowserClient } from '@/utils/supabase/client';
+import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 import { BookingWithDetails } from '@/components/admin/calendar/booking-event-card';
 
@@ -9,7 +9,7 @@ export function useBookings(date: Date, viewMode: 'month' | 'day') {
   useEffect(() => {
     async function fetchBookings() {
       setLoading(true);
-      const supabase = createBrowserClient();
+      const supabase = createClient();
       
       // Determine date range
       const start = new Date(date);

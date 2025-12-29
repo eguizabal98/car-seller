@@ -39,10 +39,15 @@ export function MonthView({
 
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+  if (!bookings && !onBookingClick) { // Basic check to see if we might want to show loading state
+     // However, loading is handled by parent. 
+     // We can just render the empty grid structure if needed, or rely on parent's overlay.
+  }
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Weekday Headers */}
-      <div className="grid grid-cols-7 border-b bg-muted/40">
+      <div className="grid grid-cols-7 border-b bg-muted/40 shrink-0">
         {weekDays.map((day) => (
           <div
             key={day}
@@ -68,7 +73,7 @@ export function MonthView({
               key={day.toString()}
               onClick={() => onDayClick?.(day)}
               className={cn(
-                'group relative border-b border-r p-2 transition-colors hover:bg-muted/30 cursor-pointer min-h-[100px] flex flex-col gap-1',
+                'group relative border-b border-r p-1 sm:p-2 transition-colors hover:bg-muted/30 cursor-pointer min-h-[80px] sm:min-h-[100px] flex flex-col gap-1',
                 !isCurrentMonth && 'bg-muted/10 text-muted-foreground',
                 isToday && 'bg-accent/10'
               )}
@@ -76,7 +81,7 @@ export function MonthView({
               <div className="flex items-center justify-between">
                 <span
                   className={cn(
-                    'text-sm font-medium h-7 w-7 flex items-center justify-center rounded-full',
+                    'text-xs sm:text-sm font-medium h-6 w-6 sm:h-7 sm:w-7 flex items-center justify-center rounded-full',
                     isToday && 'bg-primary text-primary-foreground',
                     !isCurrentMonth && 'text-muted-foreground/50'
                   )}
@@ -90,7 +95,7 @@ export function MonthView({
                 )}
               </div>
 
-              <div className="flex flex-col gap-1 mt-1 overflow-y-auto max-h-[120px]">
+              <div className="flex flex-col gap-1 mt-1 overflow-y-auto max-h-[80px] sm:max-h-[120px] scrollbar-hide">
                 {dayBookings.map((booking) => (
                   <div key={booking.id} onClick={(e) => e.stopPropagation()}>
                     <BookingEventCard

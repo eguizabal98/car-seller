@@ -88,43 +88,59 @@ export async function generateMetadata(
   }
 }
 
-export default async function CarDetailsPage({ params }: { params: Params }) {
+interface MediaItem {
+  id: string;
+  url: string;
+  type: 'image' | 'video_url';
+  thumbnail?: string;
+}
+
+export default async function CarDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const car = await getCar(id)
+  const supabase = await createClient()
   const financeEnabled = await isFeatureEnabled('finance')
 
-  if (!car) {
+  const { data: car, error } = await supabase
+    .from('vehicles')
+    .select('*, media(*)')
+    .eq('id', id)
+    .single()
+
+  if (error || !car) {
     return notFound()
   }
 
-  // Map fetched media to the format expected by MediaGallery
-  // If no media is found, fallback to placeholder logic (optional, but good for MVP)
-  let media = (car.media || []).map((m) => ({
-    id: m.id,
-    url: m.url,
-    type: m.type === '360_view' ? 'image' : m.type, // Handle 360 view if component doesn't support it yet
-    thumbnail: m.metadata && typeof m.metadata === 'object' && 'thumbnail' in m.metadata ? (m.metadata as { thumbnail: string }).thumbnail : undefined
-  }))
+  // Ensure media conforms to the expected type with optional thumbnail
+  let media: MediaItem[] = (car.media as any[])?.map((item: any) => ({
+    id: item.id,
+    url: item.url,
+    type: item.type === '360_view' ? 'image' : item.type,
+    thumbnail: item.metadata?.thumbnail_url
+  })) || [];
 
   if (media.length === 0) {
      media = [
         {
           id: '1',
           url: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20car%20front%20view%20studio%20lighting%204k&image_size=landscape_16_9',
-          type: 'image' as const,
+          type: 'image',
         },
         {
           id: '2',
           url: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20car%20interior%20leather%20seats%20dashboard%204k&image_size=landscape_16_9',
-          type: 'image' as const,
+          type: 'image',
         },
         {
-            id: '3',
-            url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // Placeholder video
-            type: 'video_url' as const,
-            thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+          id: '3',
+          url: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20car%20rear%20view%20taillights%204k&image_size=landscape_16_9',
+          type: 'image',
+        },
+        {
+          id: '4',
+          url: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20car%20side%20profile%20wheels%204k&image_size=landscape_16_9',
+          type: 'image',
         }
-     ]
+     ];
   }
 
   return (

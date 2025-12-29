@@ -26,7 +26,7 @@ export async function getProfile() {
   return { ...profile, email: user.email }
 }
 
-export async function updateProfile(formData: FormData) {
+export async function updateProfile(prevState: any, formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 

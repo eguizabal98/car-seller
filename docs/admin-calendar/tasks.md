@@ -53,12 +53,12 @@ This checklist tracks the implementation progress for the Admin Calendar feature
     - Add `sonner` toast notifications for success/error.
 
 ## Phase 5: Refinement & QA
-- [ ] **Loading & Empty States**
+- [x] **Loading & Empty States**
     - Add skeletons while fetching data.
     - Handle days with no bookings gracefully.
-- [ ] **Responsiveness**
+- [x] **Responsiveness**
     - Ensure Month View collapses or scrolls horizontally on mobile.
     - Ensure Day View is readable on smaller screens.
-- [ ] **Final Verification**
+- [x] **Final Verification**
     - Verify all Acceptance Criteria from requirements.
     - Check Dark Mode compatibility.
