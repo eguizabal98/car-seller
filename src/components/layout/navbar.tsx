@@ -55,23 +55,50 @@ export function Navbar() {
             </Button>
           </SheetTrigger>
           <SheetContent side="left">
-            <nav className="flex flex-col gap-4">
-              <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
+            <nav className="flex flex-col gap-6 mt-8">
+              <Link href="/" className="flex items-center gap-2 text-xl font-bold">
                 <Car className="h-6 w-6" />
                 <span>CarSeller</span>
               </Link>
-              <Link href="/buy" className="text-muted-foreground hover:text-foreground">
-                Buy
-              </Link>
-              <Link href="/sell" className="text-muted-foreground hover:text-foreground">
-                Sell
-              </Link>
-              <Link href="/finance" className="text-muted-foreground hover:text-foreground">
-                Finance
-              </Link>
-              <Link href="/about" className="text-muted-foreground hover:text-foreground">
-                About
-              </Link>
+              <div className="flex flex-col gap-4">
+                <Link href="/buy" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
+                  Buy
+                </Link>
+                <Link href="/sell" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
+                  Sell
+                </Link>
+                <Link href="/finance" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
+                  Finance
+                </Link>
+                <Link href="/about" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
+                  About
+                </Link>
+              </div>
+              
+              {/* Mobile User Actions */}
+              <div className="mt-auto border-t pt-6">
+                 {user ? (
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-center gap-3">
+                            <Avatar>
+                                <AvatarImage src={user.user_metadata.avatar_url} />
+                                <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col">
+                                <span className="font-medium">{user.user_metadata.full_name || 'User'}</span>
+                                <span className="text-xs text-muted-foreground">{user.email}</span>
+                            </div>
+                        </div>
+                        <Button variant="outline" onClick={handleSignOut} className="w-full justify-start">
+                            Log out
+                        </Button>
+                    </div>
+                 ) : (
+                    <Button asChild className="w-full">
+                        <Link href="/login">Sign In</Link>
+                    </Button>
+                 )}
+              </div>
             </nav>
           </SheetContent>
         </Sheet>
@@ -95,7 +122,16 @@ export function Navbar() {
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <div className="w-full flex-1 md:w-auto md:flex-none">
-            <div className="relative">
+            {/* Mobile Search Trigger */}
+            <Button variant="ghost" size="icon" className="md:hidden" asChild>
+                <Link href="/buy">
+                    <Search className="h-5 w-5 text-muted-foreground" />
+                    <span className="sr-only">Search</span>
+                </Link>
+            </Button>
+            
+            {/* Desktop Search Input */}
+            <div className="relative hidden md:block">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
@@ -107,7 +143,7 @@ export function Navbar() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full hidden md:flex">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={user.user_metadata.avatar_url} alt={user.user_metadata.full_name} />
                     <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
@@ -137,7 +173,7 @@ export function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild variant="default" size="sm">
+            <Button asChild variant="default" size="sm" className="hidden md:inline-flex">
               <Link href="/login">Sign In</Link>
             </Button>
           )}
