@@ -67,9 +67,7 @@ export function Footer() {
               {financeEnabled && (
                 <li><Link href="/finance" className="hover:text-foreground">Financing</Link></li>
               )}
-              <li><Link href="/trade-in" className="hover:text-foreground">Trade-In Valuation</Link></li>
-              <li><Link href="/insurance" className="hover:text-foreground">Insurance</Link></li>
-              <li><Link href="/service" className="hover:text-foreground">Service & Maintenance</Link></li>
+              <li><Link href="/compare" className="hover:text-foreground">Compare Cars</Link></li>
             </ul>
           </div>
           <div>
@@ -78,21 +76,12 @@ export function Footer() {
               {aboutEnabled && (
                 <li><Link href="/about" className="hover:text-foreground">About Us</Link></li>
               )}
-              <li><Link href="/contact" className="hover:text-foreground">Contact</Link></li>
-              <li><Link href="/careers" className="hover:text-foreground">Careers</Link></li>
-              <li><Link href="/privacy" className="hover:text-foreground">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="hover:text-foreground">Terms of Service</Link></li>
             </ul>
           </div>
         </div>
         <Separator className="my-8" />
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground text-center md:text-left">
           <p>© {new Date().getFullYear()} CarSeller. All rights reserved.</p>
-          <div className="flex space-x-4 mt-4 md:mt-0">
-            <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
-            <Link href="/terms" className="hover:text-foreground">Terms</Link>
-            <Link href="/sitemap" className="hover:text-foreground">Sitemap</Link>
-          </div>
         </div>
       </div>
     </footer>
