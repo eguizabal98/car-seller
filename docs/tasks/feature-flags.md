@@ -68,15 +68,15 @@ This checklist tracks the implementation of the Feature Flags system as defined 
 
 ## Phase 5: Admin Management UI
 
-- [ ] **5.1. Admin Route**
-    - [ ] Create `src/app/admin/settings/features/page.tsx`.
-    - [ ] Add link to Sidebar `src/components/admin/admin-sidebar.tsx` (under Settings or as top-level).
+- [x] **5.1. Admin Route**
+    - [x] Create `src/app/admin/settings/features/page.tsx`.
+    - [x] Add link to Sidebar `src/components/admin/admin-sidebar.tsx` (under Settings or as top-level).
 
-- [ ] **5.2. Management Interface**
-    - [ ] Fetch flags in the Admin Page.
-    - [ ] Render a list/table of features.
-    - [ ] Implement `Switch` toggles connected to `toggleFeatureFlag` server action.
-    - [ ] Add optimistic updates (optional but recommended).
+- [x] **5.2. Management Interface**
+    - [x] Fetch flags in the Admin Page.
+    - [x] Render a list/table of features.
+    - [x] Implement `Switch` toggles connected to `toggleFeatureFlag` server action.
+    - [x] Add optimistic updates (optional but recommended).
 
 ## Phase 6: Verification & Cleanup
 

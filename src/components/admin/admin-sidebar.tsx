@@ -46,8 +46,8 @@ const items = [
     icon: UserCog,
   },
   {
-    title: 'Settings',
-    url: '/admin/settings',
+    title: 'Feature Flags',
+    url: '/admin/settings/features',
     icon: Settings,
   },
 ]
