@@ -24,9 +24,21 @@ interface ServiceRecord {
 
 interface DigitalLogbookProps {
   vehicleId?: string
+  owners?: number
+  ownedSince?: string
+  lastV5C?: string
+  keys?: number
+  reportUrl?: string
 }
 
-export function DigitalLogbook({ vehicleId }: DigitalLogbookProps) {
+export function DigitalLogbook({ 
+  vehicleId, 
+  owners = 1,
+  ownedSince = 'Jan 2023',
+  lastV5C = '15 Jan 2023',
+  keys = 2,
+  reportUrl
+}: DigitalLogbookProps) {
   const [history, setHistory] = useState<ServiceRecord[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
@@ -115,19 +127,19 @@ export function DigitalLogbook({ vehicleId }: DigitalLogbookProps) {
              <div className="space-y-4">
                <div className="flex justify-between items-center py-2 border-b">
                  <span className="text-muted-foreground">Previous Owners</span>
-                 <span className="font-medium">1</span>
+                 <span className="font-medium">{owners}</span>
                </div>
                <div className="flex justify-between items-center py-2 border-b">
                  <span className="text-muted-foreground">Owned Since</span>
-                 <span className="font-medium">Jan 2023</span>
+                 <span className="font-medium">{ownedSince}</span>
                </div>
                <div className="flex justify-between items-center py-2 border-b">
                  <span className="text-muted-foreground">Last V5C Issue Date</span>
-                 <span className="font-medium">15 Jan 2023</span>
+                 <span className="font-medium">{lastV5C}</span>
                </div>
                <div className="flex justify-between items-center py-2">
                  <span className="text-muted-foreground">Keys Available</span>
-                 <span className="font-medium">2 Sets</span>
+                 <span className="font-medium">{keys} Sets</span>
                </div>
              </div>
           </TabsContent>

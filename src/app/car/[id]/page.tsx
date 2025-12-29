@@ -1,7 +1,10 @@
 import { createClient } from '@/utils/supabase/server'
 import { MediaGallery } from '@/components/car-details/media-gallery'
-import { SpecsGrid } from '@/components/car-details/specs-grid'
+import { DetailedSpecs } from '@/components/car-details/detailed-specs'
+import { MarketInsights } from '@/components/car-details/market-insights'
+import { OwnershipCosts } from '@/components/car-details/ownership-costs'
 import { DigitalLogbook } from '@/components/car-details/digital-logbook'
+import { AmenitiesList } from '@/components/car-details/amenities-list'
 import { BookingModal } from '@/components/booking/booking-modal'
 import { FinanceCalculator } from '@/components/tools/finance-calculator'
 import { Button } from '@/components/ui/button'
@@ -113,6 +116,9 @@ export default async function CarDetailsPage({ params }: { params: Promise<{ id:
     thumbnail: item.metadata?.thumbnail_url
   })) || [];
 
+  const features = (car.features as Record<string, any>) || {}
+  const amenities = (features.amenities as string[]) || []
+
   if (media.length === 0) {
      media = [
         {
@@ -164,16 +170,26 @@ export default async function CarDetailsPage({ params }: { params: Promise<{ id:
             <MediaGallery media={media} />
             
             <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-xl font-semibold mb-4">Vehicle Specifications</h3>
-                <SpecsGrid specs={{
+                <h3 className="text-xl font-semibold mb-4">Detailed Specifications</h3>
+                <DetailedSpecs specs={{
                     mileage: car.mileage,
                     year: car.year,
                     fuel_type: car.fuel_type,
                     transmission: car.transmission,
                     body_type: car.body_type,
-                    owners: car.owners || 1, // Fallback to 1 if column missing or null
+                    owners: car.owners || 1,
+                    exterior_color: car.color || undefined,
+                    interior_color: features.interior_color,
+                    engine: features.engine,
+                    drivetrain: features.drivetrain,
+                    mpg: features.mpg,
+                    stock_no: features.stock_no,
+                    vin: car.vin || undefined,
+                    doors: features.doors,
                 }} />
             </div>
+
+            <AmenitiesList amenities={amenities} />
 
             <div className="bg-card rounded-lg border p-6">
                 <h3 className="text-xl font-semibold mb-4">Description</h3>
@@ -182,7 +198,14 @@ export default async function CarDetailsPage({ params }: { params: Promise<{ id:
                 </p>
             </div>
 
-            <DigitalLogbook vehicleId={car.id} />
+            <DigitalLogbook 
+                vehicleId={car.id} 
+                owners={car.owners || 1}
+                ownedSince={features.owned_since}
+                lastV5C={features.v5c_issue_date}
+                keys={features.keys_available}
+                reportUrl={features.inspection_report_url}
+            />
         </div>
 
         {/* Right Column: CTA & Logbook */}
@@ -218,6 +241,8 @@ export default async function CarDetailsPage({ params }: { params: Promise<{ id:
                     </div>
                 </div>
                 <div className="hidden md:block">
+                     <Separator className="my-6" />
+                     <OwnershipCosts price={car.price} />
                      <Separator className="my-6" />
                     {/* Finance Calculator Integrated */}
                     {financeEnabled && <FinanceCalculator vehiclePrice={car.price} />}
