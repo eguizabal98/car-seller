@@ -3,119 +3,39 @@ import { ArrowRight, Shield, TrendingUp, Search } from 'lucide-react'
 import Link from 'next/link'
 import { FeaturedCars } from '@/components/home/featured-cars'
 import { isFeatureEnabled } from '@/lib/features'
-import { Database } from '@/types/supabase'
-
-type VehicleWithMedia = Database['public']['Tables']['vehicles']['Row'] & {
-  media: Database['public']['Tables']['media']['Row'][]
-  image?: string // Add optional image property for compatibility with Car type
-}
-
-// Mock data for featured cars (replace with DB fetch later)
-const MOCK_FEATURED_CARS: VehicleWithMedia[] = [
-  {
-    id: '1',
-    make: 'Porsche',
-    model: '911 GT3',
-    year: 2023,
-    price: 215000,
-    mileage: 1200,
-    fuel_type: 'petrol',
-    transmission: 'automatic',
-    body_type: 'Coupe',
-    status: 'available',
-    description: 'Track-ready performance.',
-    features: ['Ceramic Brakes', 'Bucket Seats'],
-    is_featured: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    vin: null,
-    color: 'GT Silver',
-    owners: 1,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Porsche%20911%20GT3%20silver%20track%20day%204k&image_size=landscape_16_9',
-    media: [
-        {
-            id: 'm1',
-            vehicle_id: '1',
-            url: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Porsche%20911%20GT3%20silver%20track%20day%204k&image_size=landscape_16_9',
-            type: 'image',
-            is_primary: true,
-            caption: null,
-            metadata: {},
-            created_at: new Date().toISOString()
-        }
-    ]
-  },
-  {
-    id: '2',
-    make: 'Mercedes-Benz',
-    model: 'G63 AMG',
-    year: 2022,
-    price: 185000,
-    mileage: 15000,
-    fuel_type: 'petrol',
-    transmission: 'automatic',
-    body_type: 'SUV',
-    status: 'available',
-    description: 'Ultimate luxury SUV.',
-    features: ['Massage Seats', 'Night Package'],
-    is_featured: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    vin: null,
-    color: 'Obsidian Black',
-    owners: 1,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Mercedes%20G63%20AMG%20black%20matte%20urban%20setting%204k&image_size=landscape_16_9',
-    media: [
-        {
-            id: 'm2',
-            vehicle_id: '2',
-            url: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Mercedes%20G63%20AMG%20black%20matte%20urban%20setting%204k&image_size=landscape_16_9',
-            type: 'image',
-            is_primary: true,
-            caption: null,
-            metadata: {},
-            created_at: new Date().toISOString()
-        }
-    ]
-  },
-  {
-    id: '3',
-    make: 'Tesla',
-    model: 'Model S Plaid',
-    year: 2023,
-    price: 89000,
-    mileage: 5000,
-    fuel_type: 'electric',
-    transmission: 'automatic',
-    body_type: 'Sedan',
-    status: 'available',
-    description: 'Electric performance redefined.',
-    features: ['FSD', 'Yoke Steering'],
-    is_featured: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    vin: null,
-    color: 'Red Multi-Coat',
-    owners: 1,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Tesla%20Model%20S%20Plaid%20red%20highway%20driving%204k&image_size=landscape_16_9',
-    media: [
-        {
-            id: 'm3',
-            vehicle_id: '3',
-            url: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Tesla%20Model%20S%20Plaid%20red%20highway%20driving%204k&image_size=landscape_16_9',
-            type: 'image',
-            is_primary: true,
-            caption: null,
-            metadata: {},
-            created_at: new Date().toISOString()
-        }
-    ]
-  }
-] as unknown as VehicleWithMedia[]
+import { createClient } from '@/utils/supabase/server'
+import { Car } from '@/components/inventory/car-card'
 
 export default async function Home() {
   const buyEnabled = await isFeatureEnabled('buy')
   const sellEnabled = await isFeatureEnabled('sell')
+  
+  const supabase = await createClient()
+  const { data: vehicles } = await supabase
+    .from('vehicles')
+    .select('*, media(*)')
+    .eq('is_featured', true)
+    .eq('status', 'available')
+    .limit(6)
+
+  const featuredCars: Car[] = (vehicles || []).map((vehicle) => {
+      // Find primary image
+      const primaryMedia = vehicle.media?.find((m: any) => m.is_primary)
+      const firstMedia = vehicle.media?.[0]
+      const imageUrl = primaryMedia?.url || firstMedia?.url || ''
+      
+      return {
+        id: vehicle.id,
+        make: vehicle.make,
+        model: vehicle.model,
+        year: vehicle.year,
+        price: vehicle.price,
+        mileage: vehicle.mileage,
+        fuel_type: vehicle.fuel_type,
+        status: vehicle.status,
+        image: imageUrl
+      }
+  })
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -196,7 +116,7 @@ export default async function Home() {
             )}
           </div>
           
-          <FeaturedCars cars={MOCK_FEATURED_CARS as any[]} />
+          <FeaturedCars cars={featuredCars} />
         </div>
       </section>
     </div>
