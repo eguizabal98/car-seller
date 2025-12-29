@@ -13,7 +13,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from '@/components/ui/sidebar'
-import { Car, Users, Calendar, BarChart, Settings, LogOut } from 'lucide-react'
+import { Car, Users, Calendar, BarChart, Settings, LogOut, UserCog } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
@@ -41,8 +41,13 @@ const items = [
     icon: BarChart,
   },
   {
-    title: 'Settings',
-    url: '/admin/settings',
+    title: 'Users',
+    url: '/admin/users',
+    icon: UserCog,
+  },
+  {
+    title: 'Feature Flags',
+    url: '/admin/settings/features',
     icon: Settings,
   },
 ]

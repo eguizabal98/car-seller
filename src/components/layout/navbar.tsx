@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Search, Menu, User, Car } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -17,10 +18,19 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { createClient } from '@/utils/supabase/client'
 import { useEffect, useState } from 'react'
 import { User as SupabaseUser } from '@supabase/supabase-js'
+import { USER_ROLES, type UserRole } from '@/lib/constants'
+import { useFeature } from '@/providers/feature-flag-provider'
 
 export function Navbar() {
   const [user, setUser] = useState<SupabaseUser | null>(null)
+  const [role, setRole] = useState<UserRole | null>(null)
   const supabase = createClient()
+  const router = useRouter()
+
+  const buyEnabled = useFeature('buy')
+  const sellEnabled = useFeature('sell')
+  const financeEnabled = useFeature('finance')
+  const aboutEnabled = useFeature('about')
 
   useEffect(() => {
     const getUser = async () => {
@@ -28,20 +38,47 @@ export function Navbar() {
         data: { user },
       } = await supabase.auth.getUser()
       setUser(user)
+
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+        
+        if (profile) {
+          setRole(profile.role as UserRole)
+        }
+      }
     }
     getUser()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (_event, session) => {
         setUser(session?.user ?? null)
+        
+        if (session?.user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single()
+          
+          if (profile) {
+            setRole(profile.role as UserRole)
+          }
+        } else {
+          setRole(null)
+        }
       }
     )
 
     return () => subscription.unsubscribe()
-  }, [])
+  }, [supabase])
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
+    router.refresh()
   }
 
   return (
@@ -61,18 +98,26 @@ export function Navbar() {
                 <span>CarSeller</span>
               </Link>
               <div className="flex flex-col gap-4">
-                <Link href="/buy" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
-                  Buy
-                </Link>
-                <Link href="/sell" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
-                  Sell
-                </Link>
-                <Link href="/finance" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
-                  Finance
-                </Link>
-                <Link href="/about" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
-                  About
-                </Link>
+                {buyEnabled && (
+                  <Link href="/buy" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
+                    Buy
+                  </Link>
+                )}
+                {sellEnabled && (
+                  <Link href="/sell" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
+                    Sell
+                  </Link>
+                )}
+                {financeEnabled && (
+                  <Link href="/finance" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
+                    Finance
+                  </Link>
+                )}
+                {aboutEnabled && (
+                  <Link href="/about" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
+                    About
+                  </Link>
+                )}
               </div>
               
               {/* Mobile User Actions */}
@@ -87,11 +132,19 @@ export function Navbar() {
                             <div className="flex flex-col">
                                 <span className="font-medium">{user.user_metadata.full_name || 'User'}</span>
                                 <span className="text-xs text-muted-foreground">{user.email}</span>
-                            </div>
                         </div>
-                        <Button variant="outline" onClick={handleSignOut} className="w-full justify-start">
-                            Log out
-                        </Button>
+                    </div>
+                    {(role === USER_ROLES.ADMIN || role === USER_ROLES.STAFF) && (
+                      <Button variant="ghost" asChild className="w-full justify-start">
+                        <Link href="/admin/inventory">Admin Panel</Link>
+                      </Button>
+                    )}
+                    <Button variant="ghost" asChild className="w-full justify-start">
+                        <Link href="/profile">Profile</Link>
+                    </Button>
+                    <Button variant="outline" onClick={handleSignOut} className="w-full justify-start">
+                        Log out
+                    </Button>
                     </div>
                  ) : (
                     <Button asChild className="w-full">
@@ -107,18 +160,26 @@ export function Navbar() {
           <span className="hidden font-bold sm:inline-block">CarSeller</span>
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <Link href="/buy" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            Buy
-          </Link>
-          <Link href="/sell" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            Sell
-          </Link>
-          <Link href="/finance" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            Finance
-          </Link>
-          <Link href="/about" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            About
-          </Link>
+          {buyEnabled && (
+            <Link href="/buy" className="transition-colors hover:text-foreground/80 text-foreground/60">
+              Buy
+            </Link>
+          )}
+          {sellEnabled && (
+            <Link href="/sell" className="transition-colors hover:text-foreground/80 text-foreground/60">
+              Sell
+            </Link>
+          )}
+          {financeEnabled && (
+            <Link href="/finance" className="transition-colors hover:text-foreground/80 text-foreground/60">
+              Finance
+            </Link>
+          )}
+          {aboutEnabled && (
+            <Link href="/about" className="transition-colors hover:text-foreground/80 text-foreground/60">
+              About
+            </Link>
+          )}
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <div className="w-full flex-1 md:w-auto md:flex-none">
@@ -160,8 +221,16 @@ export function Navbar() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  Profile
+                {(role === USER_ROLES.ADMIN || role === USER_ROLES.STAFF) && (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin/inventory">Admin Panel</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   Settings

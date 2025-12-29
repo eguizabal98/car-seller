@@ -1,8 +1,19 @@
+'use client'
+
 import Link from 'next/link'
 import { Car, Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
+import { useFeature } from '@/providers/feature-flag-provider'
 
 export function Footer() {
+  const footerEnabled = useFeature('footer')
+  const buyEnabled = useFeature('buy')
+  const sellEnabled = useFeature('sell')
+  const financeEnabled = useFeature('finance')
+  const aboutEnabled = useFeature('about')
+
+  if (!footerEnabled) return null
+
   return (
     <footer className="bg-background border-t">
       <div className="container py-10 md:py-16">
@@ -37,41 +48,40 @@ export function Footer() {
           <div>
             <h3 className="font-semibold mb-4">Inventory</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/buy" className="hover:text-foreground">Browse All Cars</Link></li>
-              <li><Link href="/buy?type=suv" className="hover:text-foreground">SUVs</Link></li>
-              <li><Link href="/buy?type=sedan" className="hover:text-foreground">Sedans</Link></li>
-              <li><Link href="/buy?type=electric" className="hover:text-foreground">Electric & Hybrid</Link></li>
-              <li><Link href="/sell" className="hover:text-foreground">Sell Your Car</Link></li>
+              {buyEnabled && (
+                <>
+                  <li><Link href="/buy" className="hover:text-foreground">Browse All Cars</Link></li>
+                  <li><Link href="/buy?type=suv" className="hover:text-foreground">SUVs</Link></li>
+                  <li><Link href="/buy?type=sedan" className="hover:text-foreground">Sedans</Link></li>
+                  <li><Link href="/buy?type=electric" className="hover:text-foreground">Electric & Hybrid</Link></li>
+                </>
+              )}
+              {sellEnabled && (
+                <li><Link href="/sell" className="hover:text-foreground">Sell Your Car</Link></li>
+              )}
             </ul>
           </div>
           <div>
             <h3 className="font-semibold mb-4">Services</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/finance" className="hover:text-foreground">Financing</Link></li>
-              <li><Link href="/trade-in" className="hover:text-foreground">Trade-In Valuation</Link></li>
-              <li><Link href="/insurance" className="hover:text-foreground">Insurance</Link></li>
-              <li><Link href="/service" className="hover:text-foreground">Service & Maintenance</Link></li>
+              {financeEnabled && (
+                <li><Link href="/finance" className="hover:text-foreground">Financing</Link></li>
+              )}
+              <li><Link href="/compare" className="hover:text-foreground">Compare Cars</Link></li>
             </ul>
           </div>
           <div>
             <h3 className="font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/about" className="hover:text-foreground">About Us</Link></li>
-              <li><Link href="/contact" className="hover:text-foreground">Contact</Link></li>
-              <li><Link href="/careers" className="hover:text-foreground">Careers</Link></li>
-              <li><Link href="/privacy" className="hover:text-foreground">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="hover:text-foreground">Terms of Service</Link></li>
+              {aboutEnabled && (
+                <li><Link href="/about" className="hover:text-foreground">About Us</Link></li>
+              )}
             </ul>
           </div>
         </div>
         <Separator className="my-8" />
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground text-center md:text-left">
           <p>© {new Date().getFullYear()} CarSeller. All rights reserved.</p>
-          <div className="flex space-x-4 mt-4 md:mt-0">
-            <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
-            <Link href="/terms" className="hover:text-foreground">Terms</Link>
-            <Link href="/sitemap" className="hover:text-foreground">Sitemap</Link>
-          </div>
         </div>
       </div>
     </footer>

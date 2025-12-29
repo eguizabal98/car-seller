@@ -7,6 +7,8 @@ import { ChatWidget } from "@/components/chat/chat-widget";
 import { WhatsAppButton } from "@/components/chat/whatsapp-button";
 import { Toaster } from "@/components/ui/sonner";
 import { ComparisonFloatingBar } from "@/components/tools/comparison-floating-bar";
+import { FeatureFlagProvider } from "@/providers/feature-flag-provider";
+import { getFeatureFlags } from "@/lib/features";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,23 +25,27 @@ export const metadata: Metadata = {
   description: "Experience the finest second-hand vehicles with our digital showroom experience.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const flags = await getFeatureFlags();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <ChatWidget />
-        <WhatsAppButton />
-        <ComparisonFloatingBar />
-        <Toaster />
+        <FeatureFlagProvider initialFlags={flags}>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <ChatWidget />
+          <WhatsAppButton />
+          <ComparisonFloatingBar />
+          <Toaster />
+        </FeatureFlagProvider>
       </body>
     </html>
   );

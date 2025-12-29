@@ -1,13 +1,19 @@
 import { FinanceCalculator } from '@/components/tools/finance-calculator'
 import { TradeInForm } from '@/components/tools/trade-in-form'
 import { Separator } from '@/components/ui/separator'
+import { isFeatureEnabled } from '@/lib/features'
+import { notFound } from 'next/navigation'
 
 export const metadata = {
   title: 'Finance & Trade-In | CarSeller',
   description: 'Calculate your monthly payments and value your trade-in vehicle.',
 }
 
-export default function FinancePage() {
+export default async function FinancePage() {
+  if (!await isFeatureEnabled('finance')) {
+    return notFound()
+  }
+
   return (
     <div className="container py-8">
       <div className="mb-8">

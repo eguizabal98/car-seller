@@ -35,9 +35,7 @@ import { toast } from 'sonner'
 const formSchema = z.object({
   registration: z.string().min(1, 'Registration is required'),
   mileage: z.string().min(1, 'Mileage is required'),
-  condition: z.enum(['excellent', 'good', 'fair', 'poor'], {
-    required_error: 'Please select condition',
-  }),
+  condition: z.enum(['excellent', 'good', 'fair', 'poor']),
   make: z.string().min(1, 'Make is required'),
   model: z.string().min(1, 'Model is required'),
   year: z.string().min(4, 'Year is required'),

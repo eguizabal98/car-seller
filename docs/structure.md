@@ -68,6 +68,7 @@ The project follows a standard Next.js App Router structure with the `src` direc
 ### Database & Auth (Supabase)
 *   **Client Creation**: Use `createBrowserClient` for client-side and helper functions for server-side.
 *   **Location**: Supabase utilities are located in `src/utils/supabase/`.
+*   **Migrations**: After creating a new migration file in `supabase/migrations/`, run `npx supabase db push` to apply changes to the remote database.
 
 ### Imports
 *   **Path Aliases**: Use `@/` to import from the `src` directory.
