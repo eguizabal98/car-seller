@@ -15,7 +15,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Play, Expand } from 'lucide-react'
+import { Play, Expand, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface MediaItem {
@@ -36,7 +36,7 @@ export function MediaGallery({ media }: MediaGalleryProps) {
   return (
     <div className="space-y-4">
       {/* Main Display */}
-      <div className="relative overflow-hidden rounded-lg border bg-muted">
+      <div className="relative overflow-hidden rounded-lg border bg-muted group">
         <AspectRatio ratio={16 / 9}>
           {activeMedia?.type === 'video_url' ? (
             <div className="relative h-full w-full">
@@ -53,11 +53,41 @@ export function MediaGallery({ media }: MediaGalleryProps) {
             <img
               src={activeMedia?.url || '/placeholder.svg'}
               alt="Vehicle View"
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
             />
           )}
         </AspectRatio>
         
+        {/* Navigation Arrows for Main Image (Mobile Friendly) */}
+        <div className="absolute inset-y-0 left-0 flex items-center pl-2 opacity-0 group-hover:opacity-100 transition-opacity md:opacity-100">
+             <Button 
+                size="icon" 
+                variant="secondary" 
+                className="rounded-full bg-black/40 text-white hover:bg-black/60 border-none h-8 w-8 md:h-10 md:w-10"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    const newIndex = activeIndex === 0 ? media.length - 1 : activeIndex - 1;
+                    setActiveIndex(newIndex);
+                }}
+             >
+                <ChevronLeft className="h-4 w-4" />
+             </Button>
+        </div>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-2 opacity-0 group-hover:opacity-100 transition-opacity md:opacity-100">
+             <Button 
+                size="icon" 
+                variant="secondary" 
+                className="rounded-full bg-black/40 text-white hover:bg-black/60 border-none h-8 w-8 md:h-10 md:w-10"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    const newIndex = activeIndex === media.length - 1 ? 0 : activeIndex + 1;
+                    setActiveIndex(newIndex);
+                }}
+             >
+                <ChevronRight className="h-4 w-4" />
+             </Button>
+        </div>
+
         {/* Lightbox Trigger (Only for images for now) */}
         {activeMedia?.type === 'image' && (
           <Dialog>

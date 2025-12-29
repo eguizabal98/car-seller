@@ -21,6 +21,8 @@ export interface Car {
   status: string
 }
 
+import Image from 'next/image'
+
 export function CarCard({ car }: { car: Car }) {
   const { addCar, cars, removeCar } = useComparisonStore()
   const isSelected = cars.some((c) => c.id === car.id)
@@ -44,22 +46,23 @@ export function CarCard({ car }: { car: Car }) {
 
   return (
     <Card className="overflow-hidden border-none shadow-md hover:shadow-xl transition-shadow duration-300 group">
-      <div className="aspect-[4/3] relative overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img 
-          src={car.image || IMAGES.PLACEHOLDER_CAR} 
+      <div className="aspect-[4/3] relative overflow-hidden bg-muted">
+        <Image
+          src={car.image || IMAGES.PLACEHOLDER_CAR}
           alt={`${car.make} ${car.model}`}
+          fill
           className="object-cover w-full h-full hover:scale-105 transition-transform duration-500"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
-        <div className="absolute top-2 right-2">
-          <Badge variant={car.status === 'available' ? 'default' : 'secondary'} className="uppercase tracking-wider">
+        <div className="absolute top-2 right-2 z-10">
+          <Badge variant={car.status === 'available' ? 'default' : 'secondary'} className="uppercase tracking-wider shadow-sm">
             {car.status}
           </Badge>
         </div>
         <Button
             size="sm"
             variant={isSelected ? "default" : "secondary"}
-            className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute top-2 left-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity opacity-100 shadow-sm"
             onClick={toggleCompare}
         >
             {isSelected ? <Check className="h-4 w-4 mr-1" /> : <Plus className="h-4 w-4 mr-1" />}

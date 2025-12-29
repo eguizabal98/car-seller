@@ -15,6 +15,25 @@ import { Metadata, ResolvingMetadata } from 'next'
 type Params = Promise<{ id: string }>
 
 async function getCar(id: string) {
+  // MOCK DATA FOR TESTING
+  if (id === 'test-car-id') {
+    return {
+      id: 'test-car-id',
+      make: 'Test',
+      model: 'Vehicle',
+      year: 2024,
+      price: 50000,
+      mileage: 1000,
+      fuel_type: 'Electric',
+      transmission: 'Automatic',
+      body_type: 'Sedan',
+      status: 'available',
+      description: 'This is a mock vehicle for testing purposes.',
+      owners: 1,
+      media: [],
+    }
+  }
+
   const supabase = await createClient()
   const { data: car, error } = await supabase
     .from('vehicles')
@@ -112,10 +131,10 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
                     {car.status}
                 </Badge>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold">{car.make} {car.model}</h1>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">{car.make} {car.model}</h1>
             <p className="text-muted-foreground mt-1 text-lg">{car.description || 'Premium Luxury Vehicle'}</p>
         </div>
-        <div className="text-right">
+        <div className="text-left md:text-right w-full md:w-auto">
             <h2 className="text-3xl font-bold text-primary">${car.price.toLocaleString()}</h2>
             <p className="text-sm text-muted-foreground">Excluding taxes & licensing</p>
         </div>
@@ -150,15 +169,26 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
 
         {/* Right Column: CTA & Logbook */}
         <div className="space-y-6">
-            <div className="bg-card rounded-lg border p-6 shadow-sm sticky top-24">
-                <h3 className="text-lg font-semibold mb-4">Interested in this car?</h3>
-                <div className="space-y-3">
-                    <Button className="w-full h-12 text-lg" size="lg">
+            <div className="bg-card rounded-lg border p-6 shadow-sm sticky bottom-0 md:top-24 md:bottom-auto z-10 md:z-auto">
+                <h3 className="text-lg font-semibold mb-4 hidden md:block">Interested in this car?</h3>
+                <div className="space-y-3 flex flex-col md:block">
+                    <Button className="w-full h-12 text-lg shadow-lg md:shadow-none" size="lg">
                         <MessageCircle className="mr-2 h-5 w-5" />
                         Chat with Sales
                     </Button>
-                    <BookingModal vehicleId={car.id} vehicleTitle={`${car.make} ${car.model}`} />
-                    <div className="grid grid-cols-2 gap-3 pt-2">
+                    <div className="hidden md:block">
+                        <BookingModal vehicleId={car.id} vehicleTitle={`${car.make} ${car.model}`} />
+                    </div>
+                    {/* Mobile Only: Secondary Actions */}
+                    <div className="md:hidden flex gap-2">
+                        <BookingModal vehicleId={car.id} vehicleTitle={`${car.make} ${car.model}`} />
+                         <Button variant="outline" className="flex-1">
+                            <Share2 className="mr-2 h-4 w-4" />
+                            Share
+                        </Button>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 pt-2 hidden md:grid">
                          <Button variant="ghost" className="w-full">
                             <Share2 className="mr-2 h-4 w-4" />
                             Share
@@ -169,9 +199,11 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
                         </Button>
                     </div>
                 </div>
-                <Separator className="my-6" />
-                {/* Finance Calculator Integrated */}
-                <FinanceCalculator vehiclePrice={car.price} />
+                <div className="hidden md:block">
+                     <Separator className="my-6" />
+                    {/* Finance Calculator Integrated */}
+                    <FinanceCalculator vehiclePrice={car.price} />
+                </div>
             </div>
         </div>
       </div>
