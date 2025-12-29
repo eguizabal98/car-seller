@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { Fuel, Gauge, Calendar, Plus, Check } from 'lucide-react'
 import { useComparisonStore } from '@/store/comparison-store'
 import { toast } from 'sonner'
+import { IMAGES } from '@/lib/constants'
 
 export interface Car {
   id: string
@@ -46,7 +47,7 @@ export function CarCard({ car }: { car: Car }) {
       <div className="aspect-[4/3] relative overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img 
-          src={car.image || 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20car%20placeholder%20studio%20lighting&image_size=landscape_4_3'} 
+          src={car.image || IMAGES.PLACEHOLDER_CAR} 
           alt={`${car.make} ${car.model}`}
           className="object-cover w-full h-full hover:scale-105 transition-transform duration-500"
         />

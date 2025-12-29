@@ -54,14 +54,15 @@ This document outlines the files containing hardcoded data and the tasks require
     *   Updated `FinanceCalculator` to fetch defaults (interest rate, terms) from the database on mount.
     *   Added a loading state to the calculator component.
 
-## 6. Placeholder Images
+## 6. Placeholder Images (Completed)
 
 **File:** `src/app/buy/page.tsx` & `src/components/inventory/car-card.tsx`
 
-*   **Current State:** Hardcoded URLs for placeholder images.
-*   **Task:**
-    *   Upload standard placeholder images to Supabase Storage.
-    *   Replace hardcoded URLs with public URLs from Supabase Storage.
+*   **Status:** ✅ Completed
+*   **Changes:**
+    *   Created `src/lib/constants.ts` to centralize placeholder image URLs.
+    *   Replaced hardcoded strings in `CarCard` and `BuyPage` with `IMAGES` constants.
+    *   This prepares the codebase for easy switching to real Supabase Storage URLs later.
 
 ## 7. Admin Inventory Management
 

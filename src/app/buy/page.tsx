@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { FilterSidebar } from '@/components/inventory/filter-sidebar'
 import { CarCard, Car } from '@/components/inventory/car-card'
 import { Separator } from '@/components/ui/separator'
+import { IMAGES } from '@/lib/constants'
 
 // Define the shape of searchParams (they can be string | string[] | undefined)
 interface SearchParams {
@@ -57,7 +58,7 @@ export default async function BuyPage({
     mileage: v.mileage,
     fuel_type: v.fuel_type,
     status: v.status,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20car%20showroom%20side%20view%204k&image_size=landscape_4_3', // Placeholder until media table join
+    image: IMAGES.PLACEHOLDER_SHOWROOM, // Placeholder until media table join
   }))
 
   return (
