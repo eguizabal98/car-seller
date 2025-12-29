@@ -97,16 +97,11 @@ interface MediaItem {
 
 export default async function CarDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const supabase = await createClient()
   const financeEnabled = await isFeatureEnabled('finance')
 
-  const { data: car, error } = await supabase
-    .from('vehicles')
-    .select('*, media(*)')
-    .eq('id', id)
-    .single()
+  const car = await getCar(id)
 
-  if (error || !car) {
+  if (!car) {
     return notFound()
   }
 

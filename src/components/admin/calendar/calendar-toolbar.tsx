@@ -36,10 +36,10 @@ export function CalendarToolbar({
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-2 border-b">
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="icon" onClick={() => navigate('prev')}>
+        <Button variant="outline" size="icon" onClick={() => navigate('prev')} aria-label="Previous">
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="icon" onClick={() => navigate('next')}>
+        <Button variant="outline" size="icon" onClick={() => navigate('next')} aria-label="Next">
           <ChevronRight className="h-4 w-4" />
         </Button>
         <Button variant="outline" onClick={goToToday}>
