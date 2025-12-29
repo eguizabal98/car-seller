@@ -50,21 +50,21 @@ This checklist tracks the implementation of the Feature Flags system as defined 
 
 ## Phase 4: Route Protection (Server-Side)
 
-- [ ] **4.1. Buy Pages**
-    - [ ] Add check to `src/app/(public)/buy/page.tsx` (if exists) or inventory pages.
-    - [ ] Redirect/404 if disabled.
+- [x] **4.1. Buy Pages**
+    - [x] Add check to `src/app/(public)/buy/page.tsx` (if exists) or inventory pages.
+    - [x] Redirect/404 if disabled.
 
-- [ ] **4.2. Sell Page**
-    - [ ] Add check to `src/app/(public)/sell/page.tsx`.
-    - [ ] Redirect/404 if disabled.
+- [x] **4.2. Sell Page**
+    - [x] Add check to `src/app/(public)/sell/page.tsx`.
+    - [x] Redirect/404 if disabled.
 
-- [ ] **4.3. Finance Page**
-    - [ ] Add check to `src/app/(public)/finance/page.tsx`.
-    - [ ] Redirect/404 if disabled.
+- [x] **4.3. Finance Page**
+    - [x] Add check to `src/app/(public)/finance/page.tsx`.
+    - [x] Redirect/404 if disabled.
 
-- [ ] **4.4. About Page**
-    - [ ] Add check to `src/app/(public)/about/page.tsx`.
-    - [ ] Redirect/404 if disabled.
+- [x] **4.4. About Page**
+    - [x] Add check to `src/app/(public)/about/page.tsx`.
+    - [x] Redirect/404 if disabled.
 
 ## Phase 5: Admin Management UI
 

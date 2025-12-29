@@ -3,6 +3,8 @@ import { FilterSidebar } from '@/components/inventory/filter-sidebar'
 import { CarCard, Car } from '@/components/inventory/car-card'
 import { Separator } from '@/components/ui/separator'
 import { IMAGES } from '@/lib/constants'
+import { isFeatureEnabled } from '@/lib/features'
+import { notFound } from 'next/navigation'
 
 // Define the shape of searchParams (they can be string | string[] | undefined)
 interface SearchParams {
@@ -16,6 +18,10 @@ export default async function BuyPage({
 }: {
   searchParams: Promise<SearchParams>
 }) {
+  if (!await isFeatureEnabled('buy')) {
+    return notFound()
+  }
+
   const supabase = await createClient()
   const params = await searchParams
 
