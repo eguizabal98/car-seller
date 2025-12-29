@@ -1,6 +1,6 @@
 -- Create SERVICE_HISTORY table
 create table service_history (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   vehicle_id uuid references vehicles(id) on delete cascade not null,
   date date not null,
   service_type text not null, -- e.g., 'Major Service', 'Interim Service', 'Oil Change'
