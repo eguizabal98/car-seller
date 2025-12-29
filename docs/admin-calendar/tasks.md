@@ -26,27 +26,27 @@ This checklist tracks the implementation progress for the Admin Calendar feature
     - Add icons for booking type (Test Drive vs Video).
 
 ## Phase 3: Views Implementation
-- [ ] **Month View**
+- [x] **Month View**
     - Create `src/components/admin/calendar/month-view.tsx`.
     - Implement 7-column grid layout.
     - Map days of the current month.
     - Filter and render `BookingEventCard`s for each day.
-- [ ] **Day View**
+- [x] **Day View**
     - Create `src/components/admin/calendar/day-view.tsx`.
     - Implement hourly time slots (e.g., 8:00 AM - 6:00 PM).
     - Place bookings in appropriate time slots.
 
 ## Phase 4: Data Integration
-- [ ] **Data Fetching Hook**
+- [x] **Data Fetching Hook**
     - Implement data fetching logic inside `CalendarShell` or a custom hook `useBookings`.
     - Query Supabase `bookings` table with `gte` and `lte` filters for the visible date range.
     - Include relations: `vehicle` and `profile`.
-- [ ] **Booking Detail Dialog**
+- [x] **Booking Detail Dialog**
     - Create `src/components/admin/calendar/booking-detail-dialog.tsx` using Radix UI Dialog.
     - Display Customer Details (Name, Contact).
     - Display Vehicle Details (Image, Make, Model).
     - Display Booking Details (Date, Time, Notes).
-- [ ] **Status Updates**
+- [x] **Status Updates**
     - Implement `updateBookingStatus` function calling Supabase.
     - Connect "Confirm", "Cancel", "Complete" buttons in the dialog.
     - Add optimistic updates or re-fetching on success.
