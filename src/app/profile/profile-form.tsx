@@ -88,15 +88,15 @@ export function ProfileForm({ user }: ProfileFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="avatarUrl">Avatar URL</Label>
+            <Label htmlFor="avatar">Profile Picture</Label>
             <Input 
-              id="avatarUrl" 
-              name="avatarUrl" 
-              defaultValue={user.avatar_url || ''} 
-              placeholder="https://example.com/avatar.jpg"
+              id="avatar" 
+              name="avatar" 
+              type="file"
+              accept="image/*"
             />
             <p className="text-sm text-muted-foreground">
-              Provide a direct link to an image for your avatar.
+              Upload a new profile picture to replace the current one.
             </p>
           </div>
 

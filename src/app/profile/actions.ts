@@ -36,15 +36,44 @@ export async function updateProfile(prevState: any, formData: FormData) {
 
   const fullName = formData.get('fullName') as string
   const phoneNumber = formData.get('phoneNumber') as string
-  const avatarUrl = formData.get('avatarUrl') as string
+  const avatarFile = formData.get('avatar') as File | null
+
+  let avatarUrl = null
+
+  if (avatarFile && avatarFile.size > 0) {
+    const fileExt = avatarFile.name.split('.').pop()
+    const fileName = `${user.id}-${Date.now()}.${fileExt}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(fileName, avatarFile, {
+        upsert: true
+      })
+
+    if (uploadError) {
+      console.error('Error uploading avatar:', uploadError)
+      return { message: 'Failed to upload avatar', type: 'error' }
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(fileName)
+
+    avatarUrl = publicUrl
+  }
+
+  const updates: any = {
+    full_name: fullName,
+    phone_number: phoneNumber,
+  }
+
+  if (avatarUrl) {
+    updates.avatar_url = avatarUrl
+  }
 
   const { error } = await supabase
     .from('profiles')
-    .update({
-      full_name: fullName,
-      phone_number: phoneNumber,
-      avatar_url: avatarUrl,
-    })
+    .update(updates)
     .eq('id', user.id)
 
   if (error) {
