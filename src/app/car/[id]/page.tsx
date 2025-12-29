@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator'
 import { MessageCircle, CalendarCheck, Share2, Heart } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { Metadata, ResolvingMetadata } from 'next'
+import { isFeatureEnabled } from '@/lib/features'
 
 // Define params type as a Promise
 type Params = Promise<{ id: string }>
@@ -85,6 +86,7 @@ export async function generateMetadata(
 export default async function CarDetailsPage({ params }: { params: Params }) {
   const { id } = await params
   const car = await getCar(id)
+  const financeEnabled = await isFeatureEnabled('finance')
 
   if (!car) {
     return notFound()
@@ -202,7 +204,7 @@ export default async function CarDetailsPage({ params }: { params: Params }) {
                 <div className="hidden md:block">
                      <Separator className="my-6" />
                     {/* Finance Calculator Integrated */}
-                    <FinanceCalculator vehiclePrice={car.price} />
+                    {financeEnabled && <FinanceCalculator vehiclePrice={car.price} />}
                 </div>
             </div>
         </div>
