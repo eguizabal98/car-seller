@@ -15,11 +15,15 @@ export default async function AdminLayout({
     redirect('/login')
   }
 
-  // In a real app, check role:
-  // const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  // if (profile?.role !== 'admin') {
-  //   redirect('/')
-  // }
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'staff')) {
+    redirect('/')
+  }
 
   return (
     <AdminSidebar>

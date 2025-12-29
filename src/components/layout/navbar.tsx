@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Search, Menu, User, Car } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -21,6 +22,7 @@ import { User as SupabaseUser } from '@supabase/supabase-js'
 export function Navbar() {
   const [user, setUser] = useState<SupabaseUser | null>(null)
   const supabase = createClient()
+  const router = useRouter()
 
   useEffect(() => {
     const getUser = async () => {
@@ -42,6 +44,7 @@ export function Navbar() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
+    router.refresh()
   }
 
   return (
@@ -87,11 +90,14 @@ export function Navbar() {
                             <div className="flex flex-col">
                                 <span className="font-medium">{user.user_metadata.full_name || 'User'}</span>
                                 <span className="text-xs text-muted-foreground">{user.email}</span>
-                            </div>
                         </div>
-                        <Button variant="outline" onClick={handleSignOut} className="w-full justify-start">
-                            Log out
-                        </Button>
+                    </div>
+                    <Button variant="ghost" asChild className="w-full justify-start">
+                        <Link href="/profile">Profile</Link>
+                    </Button>
+                    <Button variant="outline" onClick={handleSignOut} className="w-full justify-start">
+                        Log out
+                    </Button>
                     </div>
                  ) : (
                     <Button asChild className="w-full">
@@ -160,8 +166,8 @@ export function Navbar() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  Profile
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   Settings
