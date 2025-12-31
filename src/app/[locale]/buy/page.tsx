@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator'
 import { IMAGES } from '@/lib/constants'
 import { isFeatureEnabled } from '@/lib/features'
 import { notFound } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 
 // Define the shape of searchParams (they can be string | string[] | undefined)
 interface SearchParams {
@@ -22,6 +23,7 @@ export default async function BuyPage({
     return notFound()
   }
 
+  const t = await getTranslations('Inventory')
   const supabase = await createClient()
   const params = await searchParams
 
@@ -70,9 +72,9 @@ export default async function BuyPage({
   return (
     <div className="container py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Inventory</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
         <p className="text-muted-foreground">
-          Discover our curated collection of premium vehicles.
+          {t('description')}
         </p>
       </div>
       <Separator className="my-6" />
@@ -86,9 +88,9 @@ export default async function BuyPage({
         <div className="flex-1">
           {cars.length === 0 ? (
             <div className="text-center py-20 bg-muted/30 rounded-lg">
-              <h3 className="text-lg font-medium">No vehicles found</h3>
+              <h3 className="text-lg font-medium">{t('noVehiclesFound')}</h3>
               <p className="text-muted-foreground">
-                Try adjusting your filters or check back later.
+                {t('noVehiclesDescription')}
               </p>
             </div>
           ) : (

@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -28,25 +29,26 @@ import {
 } from '@/components/ui/form'
 import { login, signup } from './actions'
 
-const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-})
-
-const signupSchema = z.object({
-  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ['confirmPassword'],
-})
-
 export default function LoginPage() {
+  const t = useTranslations('Auth')
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('login')
+
+  const loginSchema = z.object({
+    email: z.string().email(t('emailInvalid')),
+    password: z.string().min(6, t('passwordMin')),
+  })
+
+  const signupSchema = z.object({
+    fullName: z.string().min(2, t('nameMin')),
+    email: z.string().email(t('emailInvalid')),
+    password: z.string().min(6, t('passwordMin')),
+    confirmPassword: z.string(),
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: t('passwordsDoNotMatch'),
+    path: ['confirmPassword'],
+  })
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -77,11 +79,11 @@ export default function LoginPage() {
       if (result.error) {
         toast.error(result.error)
       } else if (result.success && result.redirectUrl) {
-        toast.success('Logged in successfully')
+        toast.success(t('successLogin'))
         router.push(result.redirectUrl)
       }
     } catch (error) {
-      toast.error('An unexpected error occurred')
+      toast.error(t('errorGeneric'))
       console.error(error)
     } finally {
       setIsLoading(false)
@@ -100,13 +102,13 @@ export default function LoginPage() {
       if (result.error) {
         toast.error(result.error)
       } else if (result.success) {
-        toast.success('Account created! Please check your email to verify your account.')
+        toast.success(t('successSignup'))
         setActiveTab('login')
         loginForm.reset()
         signupForm.reset()
       }
     } catch (error) {
-      toast.error('An unexpected error occurred')
+      toast.error(t('errorGeneric'))
       console.error(error)
     } finally {
       setIsLoading(false)
@@ -117,16 +119,16 @@ export default function LoginPage() {
     <div className="container flex items-center justify-center min-h-[calc(100vh-4rem)] py-10">
       <Card className="w-full max-w-[400px]">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl text-center">{t('welcomeBack')}</CardTitle>
           <CardDescription className="text-center">
-            Sign in to your account or create a new one
+            {t('welcomeDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-4">
-              <TabsTrigger value="login">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <TabsTrigger value="login">{t('signIn')}</TabsTrigger>
+              <TabsTrigger value="signup">{t('signUp')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
@@ -137,7 +139,7 @@ export default function LoginPage() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>{t('email')}</FormLabel>
                         <FormControl>
                           <Input placeholder="name@example.com" {...field} />
                         </FormControl>
@@ -150,7 +152,7 @@ export default function LoginPage() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>{t('password')}</FormLabel>
                         <FormControl>
                           <Input type="password" placeholder="••••••••" {...field} />
                         </FormControl>
@@ -162,10 +164,10 @@ export default function LoginPage() {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Signing in...
+                        {t('signingIn')}
                       </>
                     ) : (
-                      'Sign In'
+                      t('signIn')
                     )}
                   </Button>
                 </form>
@@ -180,7 +182,7 @@ export default function LoginPage() {
                     name="fullName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Full Name</FormLabel>
+                        <FormLabel>{t('fullName')}</FormLabel>
                         <FormControl>
                           <Input placeholder="John Doe" {...field} />
                         </FormControl>
@@ -193,7 +195,7 @@ export default function LoginPage() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>{t('email')}</FormLabel>
                         <FormControl>
                           <Input placeholder="name@example.com" {...field} />
                         </FormControl>
@@ -206,7 +208,7 @@ export default function LoginPage() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>{t('password')}</FormLabel>
                         <FormControl>
                           <Input type="password" placeholder="••••••••" {...field} />
                         </FormControl>
@@ -219,7 +221,7 @@ export default function LoginPage() {
                     name="confirmPassword"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Confirm Password</FormLabel>
+                        <FormLabel>{t('confirmPassword')}</FormLabel>
                         <FormControl>
                           <Input type="password" placeholder="••••••••" {...field} />
                         </FormControl>
@@ -231,10 +233,10 @@ export default function LoginPage() {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Creating account...
+                        {t('creatingAccount')}
                       </>
                     ) : (
-                      'Create Account'
+                      t('createAccount')
                     )}
                   </Button>
                 </form>

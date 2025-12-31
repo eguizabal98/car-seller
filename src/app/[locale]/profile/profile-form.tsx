@@ -10,6 +10,7 @@ import { updateProfile } from './actions'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface ProfileFormProps {
   user: {
@@ -26,6 +27,7 @@ const initialState = {
 }
 
 export function ProfileForm({ user }: ProfileFormProps) {
+  const t = useTranslations('Profile')
   const [state, formAction, isPending] = useActionState(updateProfile as any, initialState)
 
   useEffect(() => {
@@ -45,15 +47,15 @@ export function ProfileForm({ user }: ProfileFormProps) {
             <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div>
-            <CardTitle>Profile Settings</CardTitle>
-            <CardDescription>Manage your personal information</CardDescription>
+            <CardTitle>{t('settings')}</CardTitle>
+            <CardDescription>{t('description')}</CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent>
         <form action={formAction} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t('email')}</Label>
             <Input 
               id="email" 
               value={user.email} 
@@ -61,12 +63,12 @@ export function ProfileForm({ user }: ProfileFormProps) {
               className="bg-muted"
             />
             <p className="text-sm text-muted-foreground">
-              Email address cannot be changed.
+              {t('emailDescription')}
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="fullName">Full Name</Label>
+            <Label htmlFor="fullName">{t('fullName')}</Label>
             <Input 
               id="fullName" 
               name="fullName" 
@@ -76,7 +78,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phoneNumber">Phone Number</Label>
+            <Label htmlFor="phoneNumber">{t('phoneNumber')}</Label>
             <Input 
               id="phoneNumber" 
               name="phoneNumber" 
@@ -86,7 +88,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="avatar">Profile Picture</Label>
+            <Label htmlFor="avatar">{t('profilePicture')}</Label>
             <Input 
               id="avatar" 
               name="avatar" 
@@ -94,14 +96,14 @@ export function ProfileForm({ user }: ProfileFormProps) {
               accept="image/*"
             />
             <p className="text-sm text-muted-foreground">
-              Upload a new profile picture to replace the current one.
+              {t('profilePictureDescription')}
             </p>
           </div>
 
           <div className="flex justify-end">
             <Button type="submit" disabled={isPending}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Changes
+              {t('saveChanges')}
             </Button>
           </div>
         </form>

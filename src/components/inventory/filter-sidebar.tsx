@@ -18,12 +18,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import { useTranslations } from 'next-intl'
 
 interface FilterSidebarProps {
   makes: string[]
 }
 
 export function FilterSidebar({ makes }: FilterSidebarProps) {
+  const t = useTranslations('Inventory')
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -70,25 +72,25 @@ export function FilterSidebar({ makes }: FilterSidebarProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-lg">Filters</h3>
+        <h3 className="font-semibold text-lg">{t('filters')}</h3>
         <Button variant="ghost" size="sm" onClick={handleReset}>
-          Reset
+          {t('reset')}
         </Button>
       </div>
 
       <Accordion type="single" collapsible defaultValue="price" className="w-full">
         <AccordionItem value="make">
-          <AccordionTrigger>Make & Model</AccordionTrigger>
+          <AccordionTrigger>{t('makeAndModel')}</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 pt-2">
               <div className="space-y-2">
-                <Label>Make</Label>
+                <Label>{t('make')}</Label>
                 <Select value={selectedMake} onValueChange={setSelectedMake}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select Make" />
+                    <SelectValue placeholder={t('selectMake')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Makes</SelectItem>
+                    <SelectItem value="all">{t('allMakes')}</SelectItem>
                     {makes.map((make) => (
                       <SelectItem key={make} value={make}>
                         {make}
@@ -102,7 +104,7 @@ export function FilterSidebar({ makes }: FilterSidebarProps) {
         </AccordionItem>
 
         <AccordionItem value="price">
-          <AccordionTrigger>Price Range</AccordionTrigger>
+          <AccordionTrigger>{t('priceRange')}</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 pt-4 px-1">
               <Slider
@@ -122,20 +124,20 @@ export function FilterSidebar({ makes }: FilterSidebarProps) {
         </AccordionItem>
 
         <AccordionItem value="lifestyle">
-          <AccordionTrigger>Lifestyle</AccordionTrigger>
+          <AccordionTrigger>{t('lifestyle')}</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-2 pt-2">
-              <Button variant="outline" size="sm" className="mr-2 mb-2">Family-friendly</Button>
-              <Button variant="outline" size="sm" className="mr-2 mb-2">Track-ready</Button>
-              <Button variant="outline" size="sm" className="mr-2 mb-2">Eco-luxury</Button>
-              <Button variant="outline" size="sm" className="mr-2 mb-2">Off-road</Button>
+              <Button variant="outline" size="sm" className="mr-2 mb-2">{t('familyFriendly')}</Button>
+              <Button variant="outline" size="sm" className="mr-2 mb-2">{t('trackReady')}</Button>
+              <Button variant="outline" size="sm" className="mr-2 mb-2">{t('ecoLuxury')}</Button>
+              <Button variant="outline" size="sm" className="mr-2 mb-2">{t('offRoad')}</Button>
             </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
 
       <Button className="w-full" onClick={handleApplyFilters}>
-        Apply Filters
+        {t('applyFilters')}
       </Button>
     </div>
   )

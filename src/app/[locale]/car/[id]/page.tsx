@@ -15,6 +15,7 @@ import { notFound } from 'next/navigation'
 import { Metadata, ResolvingMetadata } from 'next'
 import { isFeatureEnabled } from '@/lib/features'
 import { Database } from '@/types/supabase'
+import { getTranslations } from 'next-intl/server'
 
 type VehicleWithMedia = Database['public']['Tables']['vehicles']['Row'] & {
   media: Database['public']['Tables']['media']['Row'][]
@@ -99,6 +100,7 @@ interface MediaItem {
 }
 
 export default async function CarDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const t = await getTranslations('CarDetails')
   const { id } = await params
   const financeEnabled = await isFeatureEnabled('finance')
 
@@ -160,7 +162,7 @@ export default async function CarDetailsPage({ params }: { params: Promise<{ id:
         </div>
         <div className="text-left md:text-right w-full md:w-auto">
             <h2 className="text-3xl font-bold text-primary">${car.price.toLocaleString()}</h2>
-            <p className="text-sm text-muted-foreground">Excluding taxes & licensing</p>
+            <p className="text-sm text-muted-foreground">{t('excludingTaxes')}</p>
         </div>
       </div>
 
@@ -170,7 +172,7 @@ export default async function CarDetailsPage({ params }: { params: Promise<{ id:
             <MediaGallery media={media} />
             
             <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-xl font-semibold mb-4">Detailed Specifications</h3>
+                <h3 className="text-xl font-semibold mb-4">{t('detailedSpecs')}</h3>
                 <DetailedSpecs specs={{
                     mileage: car.mileage,
                     year: car.year,
@@ -192,7 +194,7 @@ export default async function CarDetailsPage({ params }: { params: Promise<{ id:
             <AmenitiesList amenities={amenities} />
 
             <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-xl font-semibold mb-4">Description</h3>
+                <h3 className="text-xl font-semibold mb-4">{t('description')}</h3>
                 <p className="text-muted-foreground leading-relaxed">
                     {car.description || "Experience the pinnacle of automotive engineering with this exceptional vehicle. Meticulously maintained and finished in a stunning color combination, it represents the perfect blend of performance and luxury. Features include premium leather upholstery, advanced navigation system, and a suite of driver assistance technologies."}
                 </p>
@@ -211,11 +213,11 @@ export default async function CarDetailsPage({ params }: { params: Promise<{ id:
         {/* Right Column: CTA & Logbook */}
         <div className="space-y-6">
             <div className="bg-card rounded-lg border p-6 shadow-sm sticky bottom-0 md:top-24 md:bottom-auto z-10 md:z-auto">
-                <h3 className="text-lg font-semibold mb-4 hidden md:block">Interested in this car?</h3>
+                <h3 className="text-lg font-semibold mb-4 hidden md:block">{t('interested')}</h3>
                 <div className="space-y-3 flex flex-col md:block">
                     <Button className="w-full h-12 text-lg shadow-lg md:shadow-none" size="lg">
                         <MessageCircle className="mr-2 h-5 w-5" />
-                        Chat with Sales
+                        {t('chatWithSales')}
                     </Button>
                     <div className="hidden md:block">
                         <BookingModal vehicleId={car.id} vehicleTitle={`${car.make} ${car.model}`} />
@@ -225,18 +227,18 @@ export default async function CarDetailsPage({ params }: { params: Promise<{ id:
                         <BookingModal vehicleId={car.id} vehicleTitle={`${car.make} ${car.model}`} />
                          <Button variant="outline" className="flex-1">
                             <Share2 className="mr-2 h-4 w-4" />
-                            Share
+                            {t('share')}
                         </Button>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 pt-2 hidden md:grid">
                          <Button variant="ghost" className="w-full">
                             <Share2 className="mr-2 h-4 w-4" />
-                            Share
+                            {t('share')}
                         </Button>
                         <Button variant="ghost" className="w-full">
                             <Heart className="mr-2 h-4 w-4" />
-                            Save
+                            {t('save')}
                         </Button>
                     </div>
                 </div>

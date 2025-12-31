@@ -18,5 +18,83 @@
   },
   "Common": {
     "language": "Idioma"
+  },
+  "Auth": {
+    "welcomeBack": "Bienvenido de nuevo",
+    "welcomeDescription": "Inicia sesión en tu cuenta o crea una nueva",
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "fullName": "Nombre Completo",
+    "confirmPassword": "Confirmar Contraseña",
+    "createAccount": "Crear Cuenta",
+    "signingIn": "Iniciando sesión...",
+    "creatingAccount": "Creando cuenta...",
+    "successLogin": "Inicio de sesión exitoso",
+    "successSignup": "¡Cuenta creada! Por favor revisa tu correo para verificar tu cuenta.",
+    "errorGeneric": "Ocurrió un error inesperado",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden",
+    "emailInvalid": "Por favor introduce un correo válido",
+    "passwordMin": "La contraseña debe tener al menos 6 caracteres",
+    "nameMin": "El nombre debe tener al menos 2 caracteres"
+  },
+  "Profile": {
+    "settings": "Configuración del Perfil",
+    "description": "Gestiona tu información personal",
+    "email": "Correo Electrónico",
+    "emailDescription": "El correo electrónico no se puede cambiar.",
+    "fullName": "Nombre Completo",
+    "phoneNumber": "Número de Teléfono",
+    "profilePicture": "Foto de Perfil",
+    "profilePictureDescription": "Sube una nueva foto de perfil para reemplazar la actual.",
+    "saveChanges": "Guardar Cambios"
+  },
+  "Inventory": {
+    "title": "Inventario",
+    "description": "Descubre nuestra colección seleccionada de vehículos premium.",
+    "filters": "Filtros",
+    "reset": "Restablecer",
+    "makeAndModel": "Marca y Modelo",
+    "make": "Marca",
+    "selectMake": "Seleccionar Marca",
+    "allMakes": "Todas las Marcas",
+    "priceRange": "Rango de Precio",
+    "lifestyle": "Estilo de Vida",
+    "familyFriendly": "Familiar",
+    "trackReady": "Deportivo",
+    "ecoLuxury": "Eco-lujo",
+    "offRoad": "Todoterreno",
+    "applyFilters": "Aplicar Filtros",
+    "noVehiclesFound": "No se encontraron vehículos",
+    "noVehiclesDescription": "Intenta ajustar tus filtros o vuelve más tarde."
+  },
+  "Sell": {
+    "title": "Vende tu Auto",
+    "comingSoon": "Esta función estará disponible próximamente."
+  },
+  "Compare": {
+    "title": "Comparar Vehículos",
+    "header": "Comparación de Vehículos",
+    "noVehicles": "Aún no has seleccionado vehículos para comparar.",
+    "browseInventory": "Ver Inventario",
+    "feature": "Característica",
+    "action": "Acción",
+    "viewDetails": "Ver Detalles",
+    "price": "Precio",
+    "year": "Año",
+    "mileage": "Kilometraje",
+    "fuelType": "Combustible",
+    "status": "Estado"
+  },
+  "CarDetails": {
+    "excludingTaxes": "Excluyendo impuestos y licencias",
+    "detailedSpecs": "Especificaciones Detalladas",
+    "description": "Descripción",
+    "interested": "¿Interesado en este auto?",
+    "chatWithSales": "Chatear con Ventas",
+    "share": "Compartir",
+    "save": "Guardar",
+    "vehicleNotFound": "Vehículo No Encontrado"
   }
 }

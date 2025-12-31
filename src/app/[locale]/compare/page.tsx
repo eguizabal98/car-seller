@@ -10,12 +10,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { X, Check, Minus } from 'lucide-react'
-import Link from 'next/link'
+import { X } from 'lucide-react'
+import { Link } from '@/i18n/routing'
 import { useEffect, useState } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
+import { useTranslations } from 'next-intl'
 
 export default function ComparePage() {
+  const t = useTranslations('Compare')
   const { cars, removeCar } = useComparisonStore()
   const [mounted, setMounted] = useState(false)
 
@@ -29,32 +30,32 @@ export default function ComparePage() {
   if (cars.length === 0) {
     return (
       <div className="container py-20 text-center space-y-4">
-        <h1 className="text-3xl font-bold">Compare Vehicles</h1>
-        <p className="text-muted-foreground">You haven&apos;t selected any vehicles to compare yet.</p>
+        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <p className="text-muted-foreground">{t('noVehicles')}</p>
         <Button asChild>
-          <Link href="/buy">Browse Inventory</Link>
+          <Link href="/buy">{t('browseInventory')}</Link>
         </Button>
       </div>
     )
   }
 
   const specs = [
-    { label: 'Price', key: 'price', format: (v: number) => `$${v.toLocaleString()}` },
-    { label: 'Year', key: 'year' },
-    { label: 'Mileage', key: 'mileage', format: (v: number) => `${v.toLocaleString()} mi` },
-    { label: 'Fuel Type', key: 'fuel_type', format: (v: string) => <span className="capitalize">{v.replace('_', ' ')}</span> },
-    { label: 'Status', key: 'status', format: (v: string) => <span className="capitalize">{v}</span> },
+    { label: t('price'), key: 'price', format: (v: number) => `$${v.toLocaleString()}` },
+    { label: t('year'), key: 'year' },
+    { label: t('mileage'), key: 'mileage', format: (v: number) => `${v.toLocaleString()} mi` },
+    { label: t('fuelType'), key: 'fuel_type', format: (v: string) => <span className="capitalize">{v.replace('_', ' ')}</span> },
+    { label: t('status'), key: 'status', format: (v: string) => <span className="capitalize">{v}</span> },
   ]
 
   return (
     <div className="container py-8">
-      <h1 className="text-3xl font-bold mb-8">Vehicle Comparison</h1>
+      <h1 className="text-3xl font-bold mb-8">{t('header')}</h1>
       
       <div className="overflow-x-auto">
         <Table className="min-w-[600px]">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[200px]">Feature</TableHead>
+              <TableHead className="w-[200px]">{t('feature')}</TableHead>
               {cars.map((car) => (
                 <TableHead key={car.id} className="min-w-[200px]">
                   <div className="flex justify-between items-start">
@@ -91,11 +92,11 @@ export default function ComparePage() {
               </TableRow>
             ))}
             <TableRow>
-                <TableCell className="font-medium">Action</TableCell>
+                <TableCell className="font-medium">{t('action')}</TableCell>
                 {cars.map((car) => (
                     <TableCell key={`${car.id}-action`}>
                         <Button asChild className="w-full">
-                            <Link href={`/car/${car.id}`}>View Details</Link>
+                            <Link href={`/car/${car.id}`}>{t('viewDetails')}</Link>
                         </Button>
                     </TableCell>
                 ))}

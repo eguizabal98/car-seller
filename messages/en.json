@@ -18,5 +18,83 @@
   },
   "Common": {
     "language": "Language"
+  },
+  "Auth": {
+    "welcomeBack": "Welcome Back",
+    "welcomeDescription": "Sign in to your account or create a new one",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full Name",
+    "confirmPassword": "Confirm Password",
+    "createAccount": "Create Account",
+    "signingIn": "Signing in...",
+    "creatingAccount": "Creating account...",
+    "successLogin": "Logged in successfully",
+    "successSignup": "Account created! Please check your email to verify your account.",
+    "errorGeneric": "An unexpected error occurred",
+    "passwordsDoNotMatch": "Passwords don't match",
+    "emailInvalid": "Please enter a valid email address",
+    "passwordMin": "Password must be at least 6 characters",
+    "nameMin": "Full name must be at least 2 characters"
+  },
+  "Profile": {
+    "settings": "Profile Settings",
+    "description": "Manage your personal information",
+    "email": "Email",
+    "emailDescription": "Email address cannot be changed.",
+    "fullName": "Full Name",
+    "phoneNumber": "Phone Number",
+    "profilePicture": "Profile Picture",
+    "profilePictureDescription": "Upload a new profile picture to replace the current one.",
+    "saveChanges": "Save Changes"
+  },
+  "Inventory": {
+    "title": "Inventory",
+    "description": "Discover our curated collection of premium vehicles.",
+    "filters": "Filters",
+    "reset": "Reset",
+    "makeAndModel": "Make & Model",
+    "make": "Make",
+    "selectMake": "Select Make",
+    "allMakes": "All Makes",
+    "priceRange": "Price Range",
+    "lifestyle": "Lifestyle",
+    "familyFriendly": "Family-friendly",
+    "trackReady": "Track-ready",
+    "ecoLuxury": "Eco-luxury",
+    "offRoad": "Off-road",
+    "applyFilters": "Apply Filters",
+    "noVehiclesFound": "No vehicles found",
+    "noVehiclesDescription": "Try adjusting your filters or check back later."
+  },
+  "Sell": {
+    "title": "Sell Your Car",
+    "comingSoon": "This feature is coming soon."
+  },
+  "Compare": {
+    "title": "Compare Vehicles",
+    "header": "Vehicle Comparison",
+    "noVehicles": "You haven't selected any vehicles to compare yet.",
+    "browseInventory": "Browse Inventory",
+    "feature": "Feature",
+    "action": "Action",
+    "viewDetails": "View Details",
+    "price": "Price",
+    "year": "Year",
+    "mileage": "Mileage",
+    "fuelType": "Fuel Type",
+    "status": "Status"
+  },
+  "CarDetails": {
+    "excludingTaxes": "Excluding taxes & licensing",
+    "detailedSpecs": "Detailed Specifications",
+    "description": "Description",
+    "interested": "Interested in this car?",
+    "chatWithSales": "Chat with Sales",
+    "share": "Share",
+    "save": "Save",
+    "vehicleNotFound": "Vehicle Not Found"
   }
 }
