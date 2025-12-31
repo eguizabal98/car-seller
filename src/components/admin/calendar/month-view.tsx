@@ -13,6 +13,7 @@ import {
 } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { BookingEventCard, BookingWithDetails } from './booking-event-card';
+import { useTranslations } from 'next-intl';
 
 interface MonthViewProps {
   currentDate: Date;
@@ -27,6 +28,7 @@ export function MonthView({
   onBookingClick,
   onDayClick,
 }: MonthViewProps) {
+  const t = useTranslations('Admin');
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
   const startDate = startOfWeek(monthStart);
@@ -37,9 +39,10 @@ export function MonthView({
     end: endDate,
   });
 
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const weekDays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 
-  if (!bookings && !onBookingClick) { // Basic check to see if we might want to show loading state
+  if (!bookings && !onBookingClick) {
+     // Basic check to see if we might want to show loading state
      // However, loading is handled by parent. 
      // We can just render the empty grid structure if needed, or rely on parent's overlay.
   }
@@ -53,7 +56,7 @@ export function MonthView({
             key={day}
             className="p-2 text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider"
           >
-            {day}
+            {t(`weekDays.${day}`)}
           </div>
         ))}
       </div>

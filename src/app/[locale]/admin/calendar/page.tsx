@@ -1,26 +1,45 @@
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { isFeatureEnabled } from '@/lib/features';
-import { CalendarShell } from '@/components/admin/calendar/calendar-shell';
+import { CalendarShell } from '@/components/admin/calendar/calendar-shell'
+import { isFeatureEnabled } from '@/lib/features'
+import { notFound } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
+import { type Metadata, type ResolvingMetadata } from "next";
 
-export const metadata: Metadata = {
-  title: 'Admin Calendar | Car Seller',
-  description: 'Manage test drives and video walkthrough appointments',
-};
+type Props = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-export default async function AdminCalendarPage() {
-  const isEnabled = await isFeatureEnabled('admin_calendar');
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({locale, namespace: 'Admin'});
+ 
+  return {
+    title: t('calendarTitle'),
+    description: t('calendarDescription'),
+  };
+}
 
-  if (!isEnabled) {
-    notFound();
+export default async function CalendarPage() {
+  if (!await isFeatureEnabled('calendar')) {
+    return notFound()
   }
 
+  const t = await getTranslations('Admin')
+
   return (
-    <div className="flex flex-col gap-4 h-full p-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Calendar</h1>
+    <div className="space-y-6 h-full flex flex-col">
+      <div>
+        <h3 className="text-2xl font-bold tracking-tight">{t('calendarTitle')}</h3>
+        <p className="text-muted-foreground">
+          {t('calendarDescription')}
+        </p>
       </div>
-      <CalendarShell />
+      <div className="flex-1 min-h-0 border rounded-lg bg-background shadow-sm overflow-hidden">
+        <CalendarShell />
+      </div>
     </div>
-  );
+  )
 }

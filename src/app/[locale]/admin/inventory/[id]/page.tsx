@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
 import { VehicleForm } from '@/components/admin/vehicle-form'
+import { getTranslations } from 'next-intl/server'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -8,6 +9,7 @@ interface PageProps {
 
 export default async function EditVehiclePage({ params }: PageProps) {
   const { id } = await params
+  const t = await getTranslations('Admin')
   const supabase = await createClient()
 
   const { data: vehicle, error } = await supabase
@@ -23,8 +25,8 @@ export default async function EditVehiclePage({ params }: PageProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Edit Vehicle</h1>
-        <p className="text-muted-foreground">Update vehicle details.</p>
+        <h1 className="text-3xl font-bold tracking-tight">{t('editVehicle')}</h1>
+        <p className="text-muted-foreground">{t('editVehicleDesc')}</p>
       </div>
       <div className="rounded-md border bg-card p-6">
         <VehicleForm vehicle={vehicle} />

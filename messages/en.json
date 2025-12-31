@@ -195,7 +195,42 @@
     "user": "User",
     "staff": "Staff",
     "admin": "Admin",
-    "roleUpdated": "User role updated successfully"
+    "roleUpdated": "User role updated successfully",
+    "featureFlagsDescription": "Manage the availability of features across the application.",
+    "addVehicle": "Add Vehicle",
+    "addVehicleDesc": "Add a new vehicle to your inventory.",
+    "editVehicle": "Edit Vehicle",
+    "editVehicleDesc": "Update vehicle details.",
+    "calendarTitle": "Calendar",
+    "calendarDescription": "Manage test drives and video walkthrough appointments",
+    "today": "Today",
+    "monthView": "Month View",
+    "dayView": "Day View",
+    "selectView": "Select View",
+    "previous": "Previous",
+    "next": "Next",
+    "bookingDetails": "Booking Details",
+    "customerInfo": "Customer Information",
+    "notes": "Notes",
+    "currentStatus": "Current Status",
+    "cancelBooking": "Cancel Booking",
+    "confirmBooking": "Confirm Booking",
+    "markComplete": "Mark Complete",
+    "close": "Close",
+    "statusUpdated": "Booking marked as {status}",
+    "statusUpdateError": "Failed to update booking status",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "weekDays": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    }
   },
   "Chat": {
     "salesSupport": "Sales Support",
@@ -259,5 +294,19 @@
   "Metadata": {
     "title": "High-End Car Marketplace | Digital Showroom",
     "description": "Experience the finest second-hand vehicles with our digital showroom experience."
+  },
+  "About": {
+    "title": "About Us",
+    "comingSoon": "This feature is coming soon."
+  },
+  "Finance": {
+    "title": "Finance & Trade-In",
+    "description": "Flexible financing options tailored to your needs.",
+    "paymentCalculator": "Payment Calculator",
+    "paymentCalculatorDesc": "Use our calculator to estimate your monthly payments. Adjust the deposit, term, and interest rate to find a plan that works for you.",
+    "tradeInValuation": "Trade-In Valuation",
+    "tradeInValuationDesc": "Looking to upgrade? Get an instant estimate for your current vehicle. We offer competitive trade-in values to help you get behind the wheel of your dream car sooner.",
+    "metaTitle": "Finance & Trade-In | CarSeller",
+    "metaDescription": "Calculate your monthly payments and value your trade-in vehicle."
   }
 }

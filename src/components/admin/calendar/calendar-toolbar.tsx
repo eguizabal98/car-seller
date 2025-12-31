@@ -1,76 +1,75 @@
-'use client';
-
-import * as React from 'react';
-import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, List } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface CalendarToolbarProps {
-  date: Date;
-  onDateChange: (date: Date) => void;
-  viewMode: 'month' | 'day';
-  onViewModeChange: (mode: 'month' | 'day') => void;
+  onPrevious: () => void
+  onNext: () => void
+  onToday: () => void
+  view: 'month' | 'day'
+  onViewChange: (view: 'month' | 'day') => void
+  dateLabel: string
 }
 
 export function CalendarToolbar({
-  date,
-  onDateChange,
-  viewMode,
-  onViewModeChange,
+  onPrevious,
+  onNext,
+  onToday,
+  view,
+  onViewChange,
+  dateLabel,
 }: CalendarToolbarProps) {
-  const navigate = (direction: 'prev' | 'next') => {
-    const newDate = new Date(date);
-    if (viewMode === 'month') {
-      newDate.setMonth(date.getMonth() + (direction === 'next' ? 1 : -1));
-    } else {
-      newDate.setDate(date.getDate() + (direction === 'next' ? 1 : -1));
-    }
-    onDateChange(newDate);
-  };
-
-  const goToToday = () => {
-    onDateChange(new Date());
-  };
+  const t = useTranslations('Admin')
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-2 border-b">
+    <div className="flex items-center justify-between p-4 border-b">
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="icon" onClick={() => navigate('prev')} aria-label="Previous">
-          <ChevronLeft className="h-4 w-4" />
+        <Button variant="outline" size="sm" onClick={onToday}>
+          {t('today')}
         </Button>
-        <Button variant="outline" size="icon" onClick={() => navigate('next')} aria-label="Next">
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-        <Button variant="outline" onClick={goToToday}>
-          Today
-        </Button>
-        <h2 className="text-lg font-semibold ml-2 min-w-[150px]">
-          {format(date, viewMode === 'month' ? 'MMMM yyyy' : 'MMMM d, yyyy')}
-        </h2>
+        <div className="flex items-center rounded-md border shadow-sm">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 rounded-r-none border-r"
+            onClick={onPrevious}
+            title={t('previous')}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 rounded-l-none"
+            onClick={onNext}
+            title={t('next')}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+        <h2 className="text-lg font-semibold ml-2">{dateLabel}</h2>
       </div>
-
       <div className="flex items-center gap-2">
-        <Select value={viewMode} onValueChange={(v) => onViewModeChange(v as 'month' | 'day')}>
-          <SelectTrigger className="w-[140px]">
-            <SelectValue placeholder="Select View" />
+        <Select
+          value={view}
+          onValueChange={(v) => onViewChange(v as 'month' | 'day')}
+        >
+          <SelectTrigger className="w-[130px]">
+            <SelectValue placeholder={t('selectView')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="month">
-              <div className="flex items-center gap-2">
-                <CalendarIcon className="h-4 w-4" />
-                <span>Month View</span>
-              </div>
-            </SelectItem>
-            <SelectItem value="day">
-              <div className="flex items-center gap-2">
-                <List className="h-4 w-4" />
-                <span>Day View</span>
-              </div>
-            </SelectItem>
+            <SelectItem value="month">{t('monthView')}</SelectItem>
+            <SelectItem value="day">{t('dayView')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
     </div>
-  );
+  )
 }

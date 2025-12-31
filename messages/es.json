@@ -38,7 +38,17 @@
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "about": "Acerca de",
-    "required": "es requerido"
+    "required": "es requerido",
+    "compare": "Comparar",
+    "addedToCompare": "Añadido a comparar",
+    "removedFromCompare": "Eliminado de comparar",
+    "maxCompareReached": "Solo puedes comparar hasta 3 vehículos",
+    "viewDetails": "Ver Detalles"
+  },
+  "Status": {
+    "available": "Disponible",
+    "reserved": "Reservado",
+    "sold": "Vendido"
   },
   "Auth": {
     "welcomeBack": "Bienvenido de nuevo",
@@ -185,7 +195,42 @@
     "user": "Usuario",
     "staff": "Personal",
     "admin": "Administrador",
-    "roleUpdated": "Rol de usuario actualizado exitosamente"
+    "roleUpdated": "Rol de usuario actualizado exitosamente",
+    "featureFlagsDescription": "Gestiona la disponibilidad de funciones en toda la aplicación.",
+    "addVehicle": "Agregar Vehículo",
+    "addVehicleDesc": "Agrega un nuevo vehículo a tu inventario.",
+    "editVehicle": "Editar Vehículo",
+    "editVehicleDesc": "Actualizar detalles del vehículo.",
+    "calendarTitle": "Calendario",
+    "calendarDescription": "Gestiona citas de prueba de manejo y recorridos virtuales",
+    "today": "Hoy",
+    "monthView": "Vista Mes",
+    "dayView": "Vista Día",
+    "selectView": "Seleccionar Vista",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "bookingDetails": "Detalles de la Reserva",
+    "customerInfo": "Información del Cliente",
+    "notes": "Notas",
+    "currentStatus": "Estado Actual",
+    "cancelBooking": "Cancelar Reserva",
+    "confirmBooking": "Confirmar Reserva",
+    "markComplete": "Marcar como Completo",
+    "close": "Cerrar",
+    "statusUpdated": "Reserva marcada como {status}",
+    "statusUpdateError": "Error al actualizar estado de la reserva",
+    "name": "Nombre",
+    "email": "Correo",
+    "phone": "Teléfono",
+    "weekDays": {
+      "sun": "Dom",
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mié",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sáb"
+    }
   },
   "Chat": {
     "salesSupport": "Soporte de Ventas",
@@ -247,7 +292,21 @@
     "months": "meses"
   },
   "Metadata": {
-    "title": "High-End Car Marketplace | Showroom Digital",
-    "description": "Experimenta la mejor selección de vehículos de segunda mano con nuestra experiencia de showroom digital."
+    "title": "High-End Car Marketplace | Digital Showroom",
+    "description": "Experience the finest second-hand vehicles with our digital showroom experience."
+  },
+  "About": {
+    "title": "Sobre Nosotros",
+    "comingSoon": "Esta función estará disponible próximamente."
+  },
+  "Finance": {
+    "title": "Financiamiento e Intercambio",
+    "description": "Opciones de financiamiento flexibles adaptadas a tus necesidades.",
+    "paymentCalculator": "Calculadora de Pagos",
+    "paymentCalculatorDesc": "Usa nuestra calculadora para estimar tus pagos mensuales. Ajusta el depósito, plazo y tasa de interés para encontrar un plan que funcione para ti.",
+    "tradeInValuation": "Valoración de Intercambio",
+    "tradeInValuationDesc": "¿Buscas actualizar? Obtén una estimación instantánea para tu vehículo actual. Ofrecemos valores competitivos de intercambio para ayudarte a conseguir el auto de tus sueños antes.",
+    "metaTitle": "Financiamiento e Intercambio | CarSeller",
+    "metaDescription": "Calcula tus pagos mensuales y valora tu vehículo de intercambio."
   }
 }
