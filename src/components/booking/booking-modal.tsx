@@ -37,19 +37,7 @@ import { cn } from '@/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { createClient } from '@/utils/supabase/client'
 import { toast } from 'sonner'
-
-const formSchema = z.object({
-  date: z.date({
-    message: 'A date is required.',
-  }),
-  timeSlot: z.string({
-    message: 'Please select a time slot.',
-  }),
-  type: z.enum(['test_drive', 'video_walkthrough'], {
-    message: 'Please select a booking type.',
-  }),
-  notes: z.string().optional(),
-})
+import { useTranslations } from 'next-intl'
 
 interface BookingModalProps {
   vehicleId: string
@@ -57,9 +45,23 @@ interface BookingModalProps {
 }
 
 export function BookingModal({ vehicleId, vehicleTitle }: BookingModalProps) {
+  const t = useTranslations('Booking')
   const [isOpen, setIsOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const supabase = createClient()
+
+  const formSchema = z.object({
+    date: z.date({
+      message: t('dateRequired'),
+    }),
+    timeSlot: z.string({
+      message: t('timeSlotRequired'),
+    }),
+    type: z.enum(['test_drive', 'video_walkthrough'], {
+      message: t('typeRequired'),
+    }),
+    notes: z.string().optional(),
+  })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -75,7 +77,7 @@ export function BookingModal({ vehicleId, vehicleTitle }: BookingModalProps) {
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
-      toast.error('You must be logged in to book an appointment.')
+      toast.error(t('loginRequired'))
       setIsSubmitting(false)
       // Redirect to login could happen here
       return
@@ -93,9 +95,9 @@ export function BookingModal({ vehicleId, vehicleTitle }: BookingModalProps) {
 
     if (error) {
       console.error(error)
-      toast.error('Failed to book appointment. Please try again.')
+      toast.error(t('failedToBook'))
     } else {
-      toast.success('Appointment booked successfully! We will confirm shortly.')
+      toast.success(t('successBooking'))
       setIsOpen(false)
       form.reset()
     }
@@ -108,14 +110,14 @@ export function BookingModal({ vehicleId, vehicleTitle }: BookingModalProps) {
       <DialogTrigger asChild>
         <Button className="w-full h-12" size="lg" variant="outline">
           <CalendarIcon className="mr-2 h-5 w-5" />
-          Schedule Test Drive
+          {t('scheduleTestDrive')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Book an Appointment</DialogTitle>
+          <DialogTitle>{t('bookAppointment')}</DialogTitle>
           <DialogDescription>
-            Schedule a test drive or video walkthrough for the {vehicleTitle}.
+            {t('bookDescription', { vehicleTitle })}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -125,16 +127,16 @@ export function BookingModal({ vehicleId, vehicleTitle }: BookingModalProps) {
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Appointment Type</FormLabel>
+                  <FormLabel>{t('appointmentType')}</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select type" />
+                        <SelectValue placeholder={t('selectType')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="test_drive">In-Person Test Drive</SelectItem>
-                      <SelectItem value="video_walkthrough">Video Walkthrough</SelectItem>
+                      <SelectItem value="test_drive">{t('testDrive')}</SelectItem>
+                      <SelectItem value="video_walkthrough">{t('videoWalkthrough')}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -147,7 +149,7 @@ export function BookingModal({ vehicleId, vehicleTitle }: BookingModalProps) {
               name="date"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel>{t('date')}</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -161,7 +163,7 @@ export function BookingModal({ vehicleId, vehicleTitle }: BookingModalProps) {
                           {field.value ? (
                             format(field.value, 'PPP')
                           ) : (
-                            <span>Pick a date</span>
+                            <span>{t('pickDate')}</span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
@@ -189,11 +191,11 @@ export function BookingModal({ vehicleId, vehicleTitle }: BookingModalProps) {
               name="timeSlot"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Time Slot</FormLabel>
+                  <FormLabel>{t('timeSlot')}</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select time" />
+                        <SelectValue placeholder={t('selectTime')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -216,10 +218,10 @@ export function BookingModal({ vehicleId, vehicleTitle }: BookingModalProps) {
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Notes (Optional)</FormLabel>
+                  <FormLabel>{t('notes')}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Any specific questions or requests?"
+                      placeholder={t('notesPlaceholder')}
                       className="resize-none"
                       {...field}
                     />
@@ -233,10 +235,10 @@ export function BookingModal({ vehicleId, vehicleTitle }: BookingModalProps) {
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Booking...
+                  {t('booking')}
                 </>
               ) : (
-                'Confirm Booking'
+                t('confirmBooking')
               )}
             </Button>
           </form>

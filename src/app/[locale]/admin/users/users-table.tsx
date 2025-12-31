@@ -21,6 +21,7 @@ import { USER_ROLES, type UserRole } from '@/lib/constants'
 import { updateUserRole } from './actions'
 import { toast } from 'sonner'
 import { useTransition } from 'react'
+import { useTranslations } from 'next-intl'
 
 type Profile = {
   id: string
@@ -36,6 +37,7 @@ interface UsersTableProps {
 }
 
 export function UsersTable({ users, currentUserRole }: UsersTableProps) {
+  const t = useTranslations('Admin')
   const [isPending, startTransition] = useTransition()
 
   const handleRoleChange = (userId: string, newRole: UserRole) => {
@@ -44,7 +46,7 @@ export function UsersTable({ users, currentUserRole }: UsersTableProps) {
       if (result.error) {
         toast.error(result.error)
       } else {
-        toast.success('User role updated successfully')
+        toast.success(t('roleUpdated'))
       }
     })
   }
@@ -72,10 +74,10 @@ export function UsersTable({ users, currentUserRole }: UsersTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>User</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Joined</TableHead>
-            <TableHead className="text-right">ID</TableHead>
+            <TableHead>{t('user')}</TableHead>
+            <TableHead>{t('role')}</TableHead>
+            <TableHead>{t('joined')}</TableHead>
+            <TableHead className="text-right">{t('id')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -103,9 +105,9 @@ export function UsersTable({ users, currentUserRole }: UsersTableProps) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={USER_ROLES.USER}>User</SelectItem>
-                      <SelectItem value={USER_ROLES.STAFF}>Staff</SelectItem>
-                      <SelectItem value={USER_ROLES.ADMIN}>Admin</SelectItem>
+                      <SelectItem value={USER_ROLES.USER}>{t('user')}</SelectItem>
+                      <SelectItem value={USER_ROLES.STAFF}>{t('staff')}</SelectItem>
+                      <SelectItem value={USER_ROLES.ADMIN}>{t('admin')}</SelectItem>
                     </SelectContent>
                   </Select>
                 ) : (

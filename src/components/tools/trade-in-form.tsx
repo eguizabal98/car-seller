@@ -18,32 +18,28 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { CarFront, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-
-const formSchema = z.object({
-  registration: z.string().min(1, 'Registration is required'),
-  mileage: z.string().min(1, 'Mileage is required'),
-  condition: z.enum(['excellent', 'good', 'fair', 'poor']),
-  make: z.string().min(1, 'Make is required'),
-  model: z.string().min(1, 'Model is required'),
-  year: z.string().min(4, 'Year is required'),
-})
+import { useTranslations } from 'next-intl'
 
 export function TradeInForm() {
+  const t = useTranslations('Tools')
+  const tCommon = useTranslations('Common')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [valuation, setValuation] = useState<number | null>(null)
+
+  const formSchema = z.object({
+    registration: z.string().min(1, `${t('registrationPlate')} ${tCommon('required')}`),
+    mileage: z.string().min(1, `${t('currentMileage')} ${tCommon('required')}`),
+    condition: z.enum(['excellent', 'good', 'fair', 'poor']),
+    make: z.string().min(1, `${t('make')} ${tCommon('required')}`),
+    model: z.string().min(1, `${t('model')} ${tCommon('required')}`),
+    year: z.string().min(4, `${t('year')} ${tCommon('required')}`),
+  })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,7 +64,7 @@ export function TradeInForm() {
     setValuation(estimatedValue)
     
     setIsSubmitting(false)
-    toast.success('Valuation complete!')
+    toast.success(t('valuationComplete'))
   }
 
   return (
@@ -76,25 +72,25 @@ export function TradeInForm() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CarFront className="h-5 w-5" />
-          Value Your Trade-In
+          {t('valueYourTradeIn')}
         </CardTitle>
         <CardDescription>
-          Get an instant estimated value for your current vehicle.
+          {t('tradeInDescription')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         {valuation !== null ? (
           <div className="text-center py-8 space-y-4">
-            <h3 className="text-lg font-medium text-muted-foreground">Estimated Trade-In Value</h3>
+            <h3 className="text-lg font-medium text-muted-foreground">{t('estimatedValue')}</h3>
             <p className="text-4xl font-bold text-primary">${valuation.toLocaleString()}</p>
             <p className="text-sm text-muted-foreground">
-              This is an estimate. Final valuation is subject to physical inspection.
+              {t('estimateDisclaimer')}
             </p>
             <Button onClick={() => {
                 setValuation(null)
                 form.reset()
             }} variant="outline">
-                Value Another Car
+                {t('valueAnotherCar')}
             </Button>
           </div>
         ) : (
@@ -106,7 +102,7 @@ export function TradeInForm() {
                   name="registration"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Registration / Plate</FormLabel>
+                      <FormLabel>{t('registrationPlate')}</FormLabel>
                       <FormControl>
                         <Input placeholder="AB12 CDE" {...field} />
                       </FormControl>
@@ -119,7 +115,7 @@ export function TradeInForm() {
                   name="mileage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Current Mileage</FormLabel>
+                      <FormLabel>{t('currentMileage')}</FormLabel>
                       <FormControl>
                         <Input type="number" placeholder="e.g. 45000" {...field} />
                       </FormControl>
@@ -135,7 +131,7 @@ export function TradeInForm() {
                   name="make"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Make</FormLabel>
+                      <FormLabel>{t('make')}</FormLabel>
                       <FormControl>
                         <Input placeholder="e.g. BMW" {...field} />
                       </FormControl>
@@ -148,7 +144,7 @@ export function TradeInForm() {
                   name="model"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Model</FormLabel>
+                      <FormLabel>{t('model')}</FormLabel>
                       <FormControl>
                         <Input placeholder="e.g. 3 Series" {...field} />
                       </FormControl>
@@ -161,7 +157,7 @@ export function TradeInForm() {
                   name="year"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Year</FormLabel>
+                      <FormLabel>{t('year')}</FormLabel>
                       <FormControl>
                         <Input type="number" placeholder="e.g. 2019" {...field} />
                       </FormControl>
@@ -176,7 +172,7 @@ export function TradeInForm() {
                 name="condition"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
-                    <FormLabel>Condition</FormLabel>
+                    <FormLabel>{t('condition')}</FormLabel>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
@@ -188,7 +184,7 @@ export function TradeInForm() {
                             <RadioGroupItem value="excellent" />
                           </FormControl>
                           <FormLabel className="font-normal">
-                            Excellent (Like new, no issues)
+                            {t('excellent')}
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
@@ -196,7 +192,7 @@ export function TradeInForm() {
                             <RadioGroupItem value="good" />
                           </FormControl>
                           <FormLabel className="font-normal">
-                            Good (Minor wear, well maintained)
+                            {t('good')}
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
@@ -204,7 +200,7 @@ export function TradeInForm() {
                             <RadioGroupItem value="fair" />
                           </FormControl>
                           <FormLabel className="font-normal">
-                            Fair (Visible wear, needs minor work)
+                            {t('fair')}
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
@@ -212,7 +208,7 @@ export function TradeInForm() {
                             <RadioGroupItem value="poor" />
                           </FormControl>
                           <FormLabel className="font-normal">
-                            Poor (Significant issues or damage)
+                            {t('poor')}
                           </FormLabel>
                         </FormItem>
                       </RadioGroup>
@@ -226,10 +222,10 @@ export function TradeInForm() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Calculating...
+                    {t('calculating')}
                   </>
                 ) : (
-                  'Get Estimate'
+                  t('getEstimate')
                 )}
               </Button>
             </form>

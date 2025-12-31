@@ -14,48 +14,50 @@ import {
   SidebarProvider,
 } from '@/components/ui/sidebar'
 import { Car, Users, Calendar, BarChart, Settings, LogOut, UserCog } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
-
-const items = [
-  {
-    title: 'Inventory',
-    url: '/admin/inventory',
-    icon: Car,
-  },
-  {
-    title: 'Leads & Inquiries',
-    url: '/admin/leads',
-    icon: Users,
-  },
-  {
-    title: 'Calendar',
-    url: '/admin/calendar',
-    icon: Calendar,
-  },
-  {
-    title: 'Analytics',
-    url: '/admin/analytics',
-    icon: BarChart,
-  },
-  {
-    title: 'Users',
-    url: '/admin/users',
-    icon: UserCog,
-  },
-  {
-    title: 'Feature Flags',
-    url: '/admin/settings/features',
-    icon: Settings,
-  },
-]
+import { useTranslations } from 'next-intl'
 
 export function AdminSidebar({ children }: { children: React.ReactNode }) {
+  const t = useTranslations('Admin')
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
+
+  const items = [
+    {
+      title: t('inventory'),
+      url: '/admin/inventory',
+      icon: Car,
+    },
+    {
+      title: t('leads'),
+      url: '/admin/leads',
+      icon: Users,
+    },
+    {
+      title: t('calendar'),
+      url: '/admin/calendar',
+      icon: Calendar,
+    },
+    {
+      title: t('analytics'),
+      url: '/admin/analytics',
+      icon: BarChart,
+    },
+    {
+      title: t('users'),
+      url: '/admin/users',
+      icon: UserCog,
+    },
+    {
+      title: t('featureFlags'),
+      url: '/admin/settings/features',
+      icon: Settings,
+    },
+  ]
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -69,12 +71,12 @@ export function AdminSidebar({ children }: { children: React.ReactNode }) {
           <SidebarHeader className="p-4 border-b">
             <Link href="/admin/inventory" className="flex items-center gap-2 font-bold text-xl">
               <Car className="h-6 w-6 text-primary" />
-              <span>Admin Panel</span>
+              <span>{t('adminPanel')}</span>
             </Link>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel>Management</SidebarGroupLabel>
+              <SidebarGroupLabel>{t('management')}</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {items.map((item) => (
@@ -96,7 +98,7 @@ export function AdminSidebar({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem>
                 <SidebarMenuButton onClick={handleSignOut} className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20">
                   <LogOut className="h-4 w-4" />
-                  <span>Sign Out</span>
+                  <span>{t('signOut')}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

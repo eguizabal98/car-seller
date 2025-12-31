@@ -9,8 +9,10 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { format } from 'date-fns'
+import { getTranslations } from 'next-intl/server'
 
 export default async function LeadsPage() {
+  const t = await getTranslations('Admin')
   const supabase = await createClient()
   
   // Fetch bookings with user profiles and vehicle info
@@ -30,20 +32,20 @@ export default async function LeadsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Leads & Inquiries</h1>
-        <p className="text-muted-foreground">Track test drives and customer interest.</p>
+        <h1 className="text-3xl font-bold tracking-tight">{t('leads')}</h1>
+        <p className="text-muted-foreground">{t('leadsDescription')}</p>
       </div>
 
       <div className="rounded-md border bg-card">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Customer</TableHead>
-              <TableHead>Vehicle</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Date & Time</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Created At</TableHead>
+              <TableHead>{t('customer')}</TableHead>
+              <TableHead>{t('vehicle')}</TableHead>
+              <TableHead>{t('type')}</TableHead>
+              <TableHead>{t('dateTime')}</TableHead>
+              <TableHead>{t('status')}</TableHead>
+              <TableHead>{t('createdAt')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -56,7 +58,7 @@ export default async function LeadsPage() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {booking.vehicles ? `${booking.vehicles.make} ${booking.vehicles.model}` : 'Deleted Vehicle'}
+                  {booking.vehicles ? `${booking.vehicles.make} ${booking.vehicles.model}` : t('deletedVehicle')}
                 </TableCell>
                 <TableCell className="capitalize">{booking.type.replace('_', ' ')}</TableCell>
                 <TableCell>
@@ -78,7 +80,7 @@ export default async function LeadsPage() {
             {(!bookings || bookings.length === 0) && (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                  No leads found yet.
+                  {t('noLeadsFound')}
                 </TableCell>
               </TableRow>
             )}

@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 
 export async function getProfile() {
   const supabase = await createClient()
@@ -27,6 +28,7 @@ export async function getProfile() {
 }
 
 export async function updateProfile(prevState: any, formData: FormData) {
+  const t = await getTranslations('Profile')
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -49,7 +51,7 @@ export async function updateProfile(prevState: any, formData: FormData) {
 
     if (uploadError) {
       console.error('Error uploading avatar:', uploadError)
-      // return { error: 'Failed to upload avatar' }
+      // return { error: t('uploadError') }
     } else {
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
@@ -70,7 +72,7 @@ export async function updateProfile(prevState: any, formData: FormData) {
 
   if (error) {
     console.error('Error updating profile:', error)
-    return { error: 'Failed to update profile' }
+    return { error: t('updateError') }
   }
 
   // Update auth user metadata as well to keep in sync
@@ -83,5 +85,5 @@ export async function updateProfile(prevState: any, formData: FormData) {
 
   revalidatePath('/profile')
   revalidatePath('/') // Update navbar
-  return { success: 'Profile updated successfully' }
+  return { success: t('updateSuccess') }
 }

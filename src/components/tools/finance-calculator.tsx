@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
 import { Slider } from '@/components/ui/slider'
 import { Calculator, Loader2 } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
+import { useTranslations } from 'next-intl'
 
 interface FinanceCalculatorProps {
   vehiclePrice: number
@@ -20,6 +20,7 @@ interface FinanceDefaults {
 }
 
 export function FinanceCalculator({ vehiclePrice }: FinanceCalculatorProps) {
+  const t = useTranslations('Tools')
   const [loading, setLoading] = useState(true)
   const [deposit, setDeposit] = useState(vehiclePrice * 0.1) // 10% default fallback
   const [term, setTerm] = useState(48) // 48 months default fallback
@@ -74,7 +75,7 @@ export function FinanceCalculator({ vehiclePrice }: FinanceCalculatorProps) {
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <Calculator className="h-5 w-5" />
-                    Finance Calculator
+                    {t('financeCalculator')}
                 </CardTitle>
             </CardHeader>
             <CardContent className="flex justify-center py-8">
@@ -89,23 +90,23 @@ export function FinanceCalculator({ vehiclePrice }: FinanceCalculatorProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Calculator className="h-5 w-5" />
-          Finance Calculator
+          {t('financeCalculator')}
         </CardTitle>
         <CardDescription>
-          Estimate your monthly payments. This is a guide only.
+          {t('financeDescription')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label>Vehicle Price</Label>
+            <Label>{t('vehiclePrice')}</Label>
             <span className="font-medium">${vehiclePrice.toLocaleString()}</span>
           </div>
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label>Deposit</Label>
+            <Label>{t('deposit')}</Label>
             <span className="font-medium">${deposit.toLocaleString()}</span>
           </div>
           <Slider
@@ -119,8 +120,8 @@ export function FinanceCalculator({ vehiclePrice }: FinanceCalculatorProps) {
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label>Term (Months)</Label>
-            <span className="font-medium">{term} months</span>
+            <Label>{t('termMonths')}</Label>
+            <span className="font-medium">{term} {t('months')}</span>
           </div>
           <Slider
             value={[term]}
@@ -133,7 +134,7 @@ export function FinanceCalculator({ vehiclePrice }: FinanceCalculatorProps) {
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label>Interest Rate (APR %)</Label>
+            <Label>{t('interestRate')}</Label>
             <span className="font-medium">{interestRate}%</span>
           </div>
           <Slider
@@ -147,7 +148,7 @@ export function FinanceCalculator({ vehiclePrice }: FinanceCalculatorProps) {
 
         <div className="pt-4 border-t">
           <div className="flex justify-between items-end">
-            <span className="text-muted-foreground font-medium">Estimated Monthly Payment</span>
+            <span className="text-muted-foreground font-medium">{t('estimatedPayment')}</span>
             <span className="text-3xl font-bold text-primary">${monthlyPayment.toFixed(2)}</span>
           </div>
         </div>
