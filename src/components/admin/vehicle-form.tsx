@@ -7,6 +7,7 @@ import * as z from 'zod'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -29,45 +30,46 @@ import { Textarea } from '@/components/ui/textarea'
 import { updateVehicle, createVehicle } from '@/app/admin/inventory/actions'
 import { MediaUploader, MediaItem } from '@/components/admin/media-uploader'
 
-const vehicleSchema = z.object({
-  make: z.string().min(1, 'Make is required'),
-  model: z.string().min(1, 'Model is required'),
-  year: z.coerce.number().min(1900).max(new Date().getFullYear() + 1),
-  price: z.coerce.number().min(0, 'Price must be positive'),
-  status: z.enum(['available', 'sold', 'reserved']),
-  mileage: z.coerce.number().min(0).optional(),
-  color: z.string().optional(),
-  transmission: z.string().optional(),
-  fuel_type: z.string().optional(),
-  body_type: z.string().min(1, 'Body type is required'),
-  owners: z.coerce.number().min(0).default(1),
-  vin: z.string().optional(),
-  description: z.string().optional(),
-  // Extended specs (stored in features JSON)
-  engine: z.string().optional(),
-  drivetrain: z.string().optional(),
-  interior_color: z.string().optional(),
-  mpg: z.string().optional(),
-  stock_no: z.string().optional(),
-  doors: z.coerce.number().min(2).max(6).optional(),
-  amenities: z.string().optional(), // Comma separated string for input
-  // Logbook fields
-  owned_since: z.string().optional(),
-  v5c_issue_date: z.string().optional(),
-  keys_available: z.coerce.number().min(0).optional(),
-  inspection_report_url: z.string().url('Must be a valid URL').optional().or(z.literal('')),
-})
-
-type VehicleFormValues = z.infer<typeof vehicleSchema>
-
 interface VehicleFormProps {
   vehicle?: any
 }
 
 export function VehicleForm({ vehicle }: VehicleFormProps) {
+  const t = useTranslations('Admin')
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   
+  const vehicleSchema = z.object({
+    make: z.string().min(1, t('makeRequired')),
+    model: z.string().min(1, t('modelRequired')),
+    year: z.coerce.number().min(1900).max(new Date().getFullYear() + 1),
+    price: z.coerce.number().min(0, t('pricePositive')),
+    status: z.enum(['available', 'sold', 'reserved']),
+    mileage: z.coerce.number().min(0).optional(),
+    color: z.string().optional(),
+    transmission: z.string().optional(),
+    fuel_type: z.string().optional(),
+    body_type: z.string().min(1, t('bodyTypeRequired')),
+    owners: z.coerce.number().min(0).default(1),
+    vin: z.string().optional(),
+    description: z.string().optional(),
+    // Extended specs (stored in features JSON)
+    engine: z.string().optional(),
+    drivetrain: z.string().optional(),
+    interior_color: z.string().optional(),
+    mpg: z.string().optional(),
+    stock_no: z.string().optional(),
+    doors: z.coerce.number().min(2).max(6).optional(),
+    amenities: z.string().optional(), // Comma separated string for input
+    // Logbook fields
+    owned_since: z.string().optional(),
+    v5c_issue_date: z.string().optional(),
+    keys_available: z.coerce.number().min(0).optional(),
+    inspection_report_url: z.string().url(t('validUrl')).optional().or(z.literal('')),
+  })
+
+  type VehicleFormValues = z.infer<typeof vehicleSchema>
+
   const features = (vehicle?.features as Record<string, any>) || {}
   const amenitiesList = (features.amenities as string[]) || []
 
@@ -161,20 +163,20 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
           features,
           media
         })
-        toast.success('Vehicle updated successfully')
+        toast.success(t('vehicleUpdated'))
       } else {
         await createVehicle({
           ...standardData,
           features,
           media
         })
-        toast.success('Vehicle created successfully')
+        toast.success(t('vehicleCreated'))
       }
       
       router.push('/admin/inventory')
     } catch (error) {
       console.error('Error saving vehicle:', error)
-      toast.error('Failed to save vehicle')
+      toast.error(t('failedToSave'))
     } finally {
       setIsSubmitting(false)
     }
@@ -189,7 +191,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="make"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Make</FormLabel>
+                <FormLabel>{t('make')}</FormLabel>
                 <FormControl>
                   <Input placeholder="Toyota" {...field} />
                 </FormControl>
@@ -202,7 +204,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="model"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Model</FormLabel>
+                <FormLabel>{t('model')}</FormLabel>
                 <FormControl>
                   <Input placeholder="Camry" {...field} />
                 </FormControl>
@@ -215,7 +217,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="year"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Year</FormLabel>
+                <FormLabel>{t('year')}</FormLabel>
                 <FormControl>
                   <Input type="number" {...field} />
                 </FormControl>
@@ -228,7 +230,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>{t('price')}</FormLabel>
                 <FormControl>
                   <Input type="number" {...field} />
                 </FormControl>
@@ -241,11 +243,11 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="status"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Status</FormLabel>
+                <FormLabel>{t('status')}</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a status" />
+                      <SelectValue placeholder={t('selectStatus')} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -263,7 +265,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="mileage"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Mileage (km)</FormLabel>
+                <FormLabel>{t('mileage')}</FormLabel>
                 <FormControl>
                   <Input type="number" {...field} />
                 </FormControl>
@@ -276,11 +278,11 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="transmission"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Transmission</FormLabel>
+                <FormLabel>{t('transmission')}</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select transmission" />
+                      <SelectValue placeholder={t('selectTransmission')} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -298,11 +300,11 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="fuel_type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Fuel Type</FormLabel>
+                <FormLabel>{t('fuelType')}</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select fuel type" />
+                      <SelectValue placeholder={t('selectFuelType')} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -321,7 +323,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="color"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Exterior Color</FormLabel>
+                <FormLabel>{t('exteriorColor')}</FormLabel>
                 <FormControl>
                   <Input placeholder="Silver" {...field} />
                 </FormControl>
@@ -334,7 +336,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="interior_color"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Interior Color</FormLabel>
+                <FormLabel>{t('interiorColor')}</FormLabel>
                 <FormControl>
                   <Input placeholder="Black Leather" {...field} />
                 </FormControl>
@@ -347,7 +349,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="body_type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Body Type</FormLabel>
+                <FormLabel>{t('bodyType')}</FormLabel>
                 <FormControl>
                   <Input placeholder="SUV, Sedan, etc." {...field} />
                 </FormControl>
@@ -360,7 +362,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="owners"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Previous Owners</FormLabel>
+                <FormLabel>{t('previousOwners')}</FormLabel>
                 <FormControl>
                   <Input type="number" min={0} {...field} />
                 </FormControl>
@@ -373,7 +375,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="vin"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>VIN</FormLabel>
+                <FormLabel>{t('vin')}</FormLabel>
                 <FormControl>
                   <Input placeholder="Vehicle Identification Number" {...field} />
                 </FormControl>
@@ -386,7 +388,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="stock_no"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Stock Number</FormLabel>
+                <FormLabel>{t('stockNumber')}</FormLabel>
                 <FormControl>
                   <Input placeholder="Stock #" {...field} />
                 </FormControl>
@@ -399,7 +401,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="engine"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Engine</FormLabel>
+                <FormLabel>{t('engine')}</FormLabel>
                 <FormControl>
                   <Input placeholder="2.0L 4-Cylinder" {...field} />
                 </FormControl>
@@ -412,11 +414,11 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="drivetrain"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Drivetrain</FormLabel>
+                <FormLabel>{t('drivetrain')}</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select drivetrain" />
+                      <SelectValue placeholder={t('selectDrivetrain')} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -435,7 +437,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="mpg"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>MPG / Range</FormLabel>
+                <FormLabel>{t('mpgRange')}</FormLabel>
                 <FormControl>
                   <Input placeholder="25 city / 32 hwy" {...field} />
                 </FormControl>
@@ -448,7 +450,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="doors"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Doors</FormLabel>
+                <FormLabel>{t('doors')}</FormLabel>
                 <FormControl>
                   <Input type="number" min={2} max={6} {...field} />
                 </FormControl>
@@ -461,7 +463,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             name="keys_available"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Keys Available</FormLabel>
+                <FormLabel>{t('keysAvailable')}</FormLabel>
                 <FormControl>
                   <Input type="number" min={0} {...field} />
                 </FormControl>
@@ -475,7 +477,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
               name="inspection_report_url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Inspection Report URL (PDF)</FormLabel>
+                  <FormLabel>{t('inspectionReportUrl')}</FormLabel>
                   <FormControl>
                     <Input placeholder="https://example.com/report.pdf" {...field} />
                   </FormControl>
@@ -499,7 +501,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
           name="amenities"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Features & Amenities</FormLabel>
+              <FormLabel>{t('featuresAndAmenities')}</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Sunroof, Navigation, Heated Seats, Bluetooth, Backup Camera..."
@@ -508,7 +510,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
                 />
               </FormControl>
               <FormMessage />
-              <p className="text-sm text-muted-foreground">Separate features with commas</p>
+              <p className="text-sm text-muted-foreground">{t('separateFeatures')}</p>
             </FormItem>
           )}
         />
@@ -518,7 +520,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>{t('description')}</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Vehicle description..."
@@ -538,11 +540,11 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
             onClick={() => router.push('/admin/inventory')}
             disabled={isSubmitting}
           >
-            Cancel
+            {t('cancel')}
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {vehicle ? 'Update Vehicle' : 'Create Vehicle'}
+            {vehicle ? t('updateVehicle') : t('createVehicle')}
           </Button>
         </div>
       </form>

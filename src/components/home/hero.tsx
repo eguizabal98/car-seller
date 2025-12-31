@@ -1,9 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
+import { useTranslations } from 'next-intl'
 
 export function Hero() {
+  const t = useTranslations('Hero')
+
   return (
     <div className="relative min-h-[600px] lg:min-h-[80vh] w-full overflow-hidden flex items-center">
       {/* Background Image */}
@@ -19,31 +22,31 @@ export function Hero() {
       {/* Content */}
       <div className="relative z-10 container flex flex-col justify-center items-center text-center text-white space-y-8 py-20">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white drop-shadow-lg">
-          Find Your Dream Machine
+          {t('title')}
         </h1>
         <p className="text-lg md:text-xl text-gray-100 max-w-2xl drop-shadow-md leading-relaxed">
-          Experience the finest selection of premium pre-owned vehicles with our immersive digital showroom.
+          {t('description')}
         </p>
         
         {/* Search Entry Point */}
         <div className="w-full max-w-2xl flex flex-col sm:flex-row gap-2 p-2 bg-white/10 backdrop-blur-md rounded-lg border border-white/20">
           <Input 
             type="text" 
-            placeholder="Search by make, model, or lifestyle..." 
+            placeholder={t('searchPlaceholder')} 
             className="bg-transparent border-none text-white placeholder:text-gray-300 focus-visible:ring-0 text-lg h-12 w-full"
           />
           <Button size="lg" className="px-8 h-12 w-full sm:w-auto font-semibold">
             <Search className="mr-2 h-5 w-5" />
-            Search
+            {t('searchButton')}
           </Button>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full sm:w-auto">
           <Button asChild variant="outline" size="lg" className="bg-transparent text-white border-white hover:bg-white hover:text-black w-full sm:w-auto h-12 px-8 text-base">
-            <Link href="/buy">Browse Inventory</Link>
+            <Link href="/buy">{t('browseInventory')}</Link>
           </Button>
           <Button asChild variant="default" size="lg" className="w-full sm:w-auto h-12 px-8 text-base font-semibold">
-            <Link href="/sell">Sell Your Car</Link>
+            <Link href="/sell">{t('sellYourCar')}</Link>
           </Button>
         </div>
       </div>

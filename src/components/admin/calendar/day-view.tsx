@@ -1,8 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { format, isSameDay } from 'date-fns';
+import { isSameDay } from 'date-fns';
 import { BookingEventCard, BookingWithDetails } from './booking-event-card';
+import { useFormatter } from 'next-intl';
 
 interface DayViewProps {
   currentDate: Date;
@@ -11,6 +12,7 @@ interface DayViewProps {
 }
 
 export function DayView({ currentDate, bookings, onBookingClick }: DayViewProps) {
+  const format = useFormatter();
   // Generate hours from 8 AM to 8 PM
   const hours = Array.from({ length: 13 }, (_, i) => i + 8); // 8, 9, ..., 20
 
@@ -23,7 +25,7 @@ export function DayView({ currentDate, bookings, onBookingClick }: DayViewProps)
     <div className="flex flex-col h-full overflow-auto bg-background">
       {/* Header */}
       <div className="p-4 border-b text-center font-semibold sticky top-0 bg-background z-10 shadow-sm">
-        {format(currentDate, 'EEEE, MMMM d, yyyy')}
+        {format.dateTime(currentDate, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
       </div>
 
       <div className="flex-1 relative min-w-[300px] md:min-w-[600px]">
@@ -31,18 +33,21 @@ export function DayView({ currentDate, bookings, onBookingClick }: DayViewProps)
           // Find bookings for this hour
           // Assuming time_slot is in "HH:mm" or "HH:mm:ss" 24h format
           // We check if the time_slot string starts with the hour (padded)
-          const hourStr = hour.toString().padStart(2, '0');
           const hourBookings = todaysBookings.filter((booking) => {
              // Flexible matching: "09:00", "9:00", "09:30"
              const bookingHour = parseInt(booking.time_slot.split(':')[0], 10);
              return bookingHour === hour;
           });
 
+          // Create a date object for the hour to format it
+          const hourDate = new Date();
+          hourDate.setHours(hour, 0, 0, 0);
+
           return (
             <div key={hour} className="flex border-b min-h-[100px] group">
               {/* Time Label */}
               <div className="w-16 md:w-20 p-2 md:p-4 border-r text-xs md:text-sm text-muted-foreground font-medium sticky left-0 bg-background flex items-start justify-center pt-4">
-                {format(new Date().setHours(hour, 0), 'h aa')}
+                {format.dateTime(hourDate, { hour: 'numeric', hour12: true })}
               </div>
 
               {/* Events Area */}

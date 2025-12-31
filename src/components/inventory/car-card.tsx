@@ -3,11 +3,13 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
 import { Fuel, Gauge, Calendar, Plus, Check } from 'lucide-react'
 import { useComparisonStore } from '@/store/comparison-store'
 import { toast } from 'sonner'
 import { IMAGES } from '@/lib/constants'
+import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 
 export interface Car {
   id: string
@@ -21,9 +23,9 @@ export interface Car {
   status: string
 }
 
-import Image from 'next/image'
-
 export function CarCard({ car }: { car: Car }) {
+  const tCommon = useTranslations('Common')
+  const tStatus = useTranslations('Status')
   const { addCar, cars, removeCar } = useComparisonStore()
   const isSelected = cars.some((c) => c.id === car.id)
 
@@ -33,14 +35,14 @@ export function CarCard({ car }: { car: Car }) {
     
     if (isSelected) {
       removeCar(car.id)
-      toast.info('Removed from comparison')
+      toast.info(tCommon('removedFromCompare'))
     } else {
       if (cars.length >= 3) {
-        toast.error('You can only compare up to 3 vehicles')
+        toast.error(tCommon('maxCompareReached'))
         return
       }
       addCar(car)
-      toast.success('Added to comparison')
+      toast.success(tCommon('addedToCompare'))
     }
   }
 
@@ -56,7 +58,7 @@ export function CarCard({ car }: { car: Car }) {
         />
         <div className="absolute top-2 right-2 z-10">
           <Badge variant={car.status === 'available' ? 'default' : 'secondary'} className="uppercase tracking-wider shadow-sm">
-            {car.status}
+            {tStatus(car.status as any)}
           </Badge>
         </div>
         <Button
@@ -66,7 +68,7 @@ export function CarCard({ car }: { car: Car }) {
             onClick={toggleCompare}
         >
             {isSelected ? <Check className="h-4 w-4 mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
-            Compare
+            {tCommon('compare')}
         </Button>
       </div>
       <CardHeader className="pb-2">
@@ -98,7 +100,7 @@ export function CarCard({ car }: { car: Car }) {
       </CardContent>
       <CardFooter>
         <Button asChild className="w-full">
-          <Link href={`/car/${car.id}`}>View Details</Link>
+          <Link href={`/car/${car.id}`}>{tCommon('viewDetails')}</Link>
         </Button>
       </CardFooter>
     </Card>

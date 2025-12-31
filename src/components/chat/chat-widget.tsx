@@ -9,6 +9,8 @@ import { createClient } from '@/utils/supabase/client'
 import { toast } from 'sonner'
 import { User as SupabaseUser } from '@supabase/supabase-js'
 import { cn } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/routing'
 
 interface Message {
   id: string
@@ -18,6 +20,7 @@ interface Message {
 }
 
 export function ChatWidget() {
+  const t = useTranslations('Chat')
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState('')
@@ -116,7 +119,7 @@ export function ChatWidget() {
     })
 
     if (error) {
-        toast.error('Failed to send message')
+        toast.error(t('failedToSend'))
     } else {
         setNewMessage('')
     }
@@ -148,7 +151,7 @@ export function ChatWidget() {
           <CardHeader className="flex flex-row items-center justify-between p-4 border-b">
             <CardTitle className="text-lg flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-green-500" />
-              Sales Support
+              {t('salesSupport')}
             </CardTitle>
             <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="h-8 w-8">
               <X className="h-5 w-5" />
@@ -158,9 +161,9 @@ export function ChatWidget() {
           <CardContent className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/30">
             {!user ? (
                 <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
-                    <p className="text-muted-foreground">Please sign in to chat with our team.</p>
+                    <p className="text-muted-foreground">{t('signInToChat')}</p>
                     <Button asChild variant="outline" size="sm">
-                        <a href="/login">Sign In</a>
+                        <Link href="/login">{t('signIn')}</Link>
                     </Button>
                 </div>
             ) : isLoading ? (
@@ -171,7 +174,7 @@ export function ChatWidget() {
                 <>
                     {messages.length === 0 && (
                         <p className="text-center text-sm text-muted-foreground py-4">
-                            Start a conversation with us!
+                            {t('startConversation')}
                         </p>
                     )}
                     {messages.map((msg) => {
@@ -198,7 +201,7 @@ export function ChatWidget() {
           <CardFooter className="p-3 border-t">
             <form onSubmit={sendMessage} className="flex w-full gap-2">
               <Input
-                placeholder="Type a message..."
+                placeholder={t('typeMessage')}
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 disabled={!user || isLoading}

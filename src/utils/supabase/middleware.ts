@@ -2,8 +2,8 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { USER_ROLES } from '@/lib/constants'
 
-export async function updateSession(request: NextRequest) {
-  let response = NextResponse.next({
+export async function updateSession(request: NextRequest, initialResponse?: NextResponse) {
+  let response = initialResponse ?? NextResponse.next({
     request: {
       headers: request.headers,
     },
@@ -21,9 +21,15 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value, options }) =>
             request.cookies.set(name, value)
           )
-          response = NextResponse.next({
-            request,
-          })
+          
+          // If we didn't have an initial response, we might want to refresh it with the new request
+          // But if we do (from next-intl), we must preserve it.
+          if (!initialResponse) {
+             response = NextResponse.next({
+                request,
+             })
+          }
+          
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           )
@@ -35,9 +41,15 @@ export async function updateSession(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   // Protect Admin Routes
-  if (request.nextUrl.pathname.startsWith('/admin')) {
+  // Handle localized paths (e.g. /es/admin, /en/admin, or just /admin)
+  const pathname = request.nextUrl.pathname
+  const isAdminRoute = pathname.startsWith('/admin') || pathname.match(/^\/[a-z]{2}\/admin/)
+
+  if (isAdminRoute) {
     if (!user) {
       const url = request.nextUrl.clone()
+      // Redirect to login (preserve locale?)
+      // For now, simple redirect.
       url.pathname = '/login'
       return NextResponse.redirect(url)
     }
