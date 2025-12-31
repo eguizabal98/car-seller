@@ -1,0 +1,22 @@
+{
+  "Hero": {
+    "title": "Encuentra la Máquina de tus Sueños",
+    "description": "Experimenta la mejor selección de vehículos premium usados con nuestro showroom digital inmersivo.",
+    "searchPlaceholder": "Buscar por marca, modelo o estilo de vida...",
+    "searchButton": "Buscar",
+    "browseInventory": "Ver Inventario",
+    "sellYourCar": "Vende tu Auto"
+  },
+  "Navbar": {
+    "buy": "Comprar",
+    "sell": "Vender",
+    "finance": "Financiamiento",
+    "compare": "Comparar",
+    "admin": "Admin",
+    "login": "Iniciar Sesión",
+    "profile": "Perfil"
+  },
+  "Common": {
+    "language": "Idioma"
+  }
+}

@@ -1,7 +1,6 @@
 'use client'
 
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { Link, useRouter } from '@/i18n/routing'
 import { Search, Menu, User, Car } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,8 +19,11 @@ import { useEffect, useState } from 'react'
 import { User as SupabaseUser } from '@supabase/supabase-js'
 import { USER_ROLES, type UserRole } from '@/lib/constants'
 import { useFeature } from '@/providers/feature-flag-provider'
+import { useTranslations } from 'next-intl'
+import { LanguageSelector } from '@/components/ui/language-selector'
 
 export function Navbar() {
+  const t = useTranslations('Navbar')
   const [user, setUser] = useState<SupabaseUser | null>(null)
   const [role, setRole] = useState<UserRole | null>(null)
   const supabase = createClient()
@@ -100,17 +102,17 @@ export function Navbar() {
               <div className="flex flex-col gap-4">
                 {buyEnabled && (
                   <Link href="/buy" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
-                    Buy
+                    {t('buy')}
                   </Link>
                 )}
                 {sellEnabled && (
                   <Link href="/sell" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
-                    Sell
+                    {t('sell')}
                   </Link>
                 )}
                 {financeEnabled && (
                   <Link href="/finance" className="text-lg font-medium text-muted-foreground hover:text-foreground py-2">
-                    Finance
+                    {t('finance')}
                   </Link>
                 )}
                 {aboutEnabled && (
@@ -136,11 +138,11 @@ export function Navbar() {
                     </div>
                     {(role === USER_ROLES.ADMIN || role === USER_ROLES.STAFF) && (
                       <Button variant="ghost" asChild className="w-full justify-start">
-                        <Link href="/admin/inventory">Admin Panel</Link>
+                        <Link href="/admin/inventory">{t('admin')}</Link>
                       </Button>
                     )}
                     <Button variant="ghost" asChild className="w-full justify-start">
-                        <Link href="/profile">Profile</Link>
+                        <Link href="/profile">{t('profile')}</Link>
                     </Button>
                     <Button variant="outline" onClick={handleSignOut} className="w-full justify-start">
                         Log out
@@ -148,7 +150,7 @@ export function Navbar() {
                     </div>
                  ) : (
                     <Button asChild className="w-full">
-                        <Link href="/login">Sign In</Link>
+                        <Link href="/login">{t('login')}</Link>
                     </Button>
                  )}
               </div>
@@ -162,17 +164,17 @@ export function Navbar() {
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           {buyEnabled && (
             <Link href="/buy" className="transition-colors hover:text-foreground/80 text-foreground/60">
-              Buy
+              {t('buy')}
             </Link>
           )}
           {sellEnabled && (
             <Link href="/sell" className="transition-colors hover:text-foreground/80 text-foreground/60">
-              Sell
+              {t('sell')}
             </Link>
           )}
           {financeEnabled && (
             <Link href="/finance" className="transition-colors hover:text-foreground/80 text-foreground/60">
-              Finance
+              {t('finance')}
             </Link>
           )}
           {aboutEnabled && (
@@ -201,6 +203,9 @@ export function Navbar() {
               />
             </div>
           </div>
+          
+          <LanguageSelector />
+
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -224,13 +229,13 @@ export function Navbar() {
                 {(role === USER_ROLES.ADMIN || role === USER_ROLES.STAFF) && (
                   <>
                     <DropdownMenuItem asChild>
-                      <Link href="/admin/inventory">Admin Panel</Link>
+                      <Link href="/admin/inventory">{t('admin')}</Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                   </>
                 )}
                 <DropdownMenuItem asChild>
-                  <Link href="/profile">Profile</Link>
+                  <Link href="/profile">{t('profile')}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   Settings
@@ -243,7 +248,7 @@ export function Navbar() {
             </DropdownMenu>
           ) : (
             <Button asChild variant="default" size="sm" className="hidden md:inline-flex">
-              <Link href="/login">Sign In</Link>
+              <Link href="/login">{t('login')}</Link>
             </Button>
           )}
         </div>

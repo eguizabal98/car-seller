@@ -1,0 +1,22 @@
+{
+  "Hero": {
+    "title": "Find Your Dream Machine",
+    "description": "Experience the finest selection of premium pre-owned vehicles with our immersive digital showroom.",
+    "searchPlaceholder": "Search by make, model, or lifestyle...",
+    "searchButton": "Search",
+    "browseInventory": "Browse Inventory",
+    "sellYourCar": "Sell Your Car"
+  },
+  "Navbar": {
+    "buy": "Buy",
+    "sell": "Sell",
+    "finance": "Finance",
+    "compare": "Compare",
+    "admin": "Admin",
+    "login": "Login",
+    "profile": "Profile"
+  },
+  "Common": {
+    "language": "Language"
+  }
+}
