@@ -7,6 +7,18 @@
     "browseInventory": "Ver Inventario",
     "sellYourCar": "Vende tu Auto"
   },
+  "Home": {
+    "verifiedQuality": "Calidad Verificada",
+    "verifiedQualityDesc": "Cada vehículo se somete a una rigurosa inspección de 150 puntos para garantizar una calidad premium.",
+    "fairPricing": "Precios Justos",
+    "fairPricingDesc": "Precios transparentes basados en datos de mercado en tiempo real. Sin tarifas ocultas.",
+    "easySearch": "Búsqueda Fácil",
+    "easySearchDesc": "Filtros avanzados para ayudarte a encontrar la marca, modelo y características exactas que deseas.",
+    "featuredVehicles": "Vehículos Destacados",
+    "featuredVehiclesDesc": "Selecciones cuidadosamente elegidas solo para ti.",
+    "viewAll": "Ver Todos",
+    "viewAllInventory": "Ver Todo el Inventario"
+  },
   "Navbar": {
     "buy": "Comprar",
     "sell": "Vender",

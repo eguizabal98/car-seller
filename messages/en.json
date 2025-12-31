@@ -1,11 +1,23 @@
 {
   "Hero": {
-    "title": "Find Your Dream Machine",
-    "description": "Experience the finest selection of premium pre-owned vehicles with our immersive digital showroom.",
+    "title": "Find Your Dream Car",
+    "description": "Experience the finest selection of premium pre-owned vehicles. Quality, transparency, and trust in every deal.",
     "searchPlaceholder": "Search by make, model, or lifestyle...",
     "searchButton": "Search",
     "browseInventory": "Browse Inventory",
     "sellYourCar": "Sell Your Car"
+  },
+  "Home": {
+    "verifiedQuality": "Verified Quality",
+    "verifiedQualityDesc": "Every vehicle undergoes a rigorous 150-point inspection to ensure premium quality.",
+    "fairPricing": "Fair Pricing",
+    "fairPricingDesc": "Transparent pricing based on real-time market data. No hidden fees.",
+    "easySearch": "Easy Search",
+    "easySearchDesc": "Advanced filters to help you find the exact make, model, and features you want.",
+    "featuredVehicles": "Featured Vehicles",
+    "featuredVehiclesDesc": "Hand-picked selections just for you.",
+    "viewAll": "View All",
+    "viewAllInventory": "View All Inventory"
   },
   "Navbar": {
     "buy": "Buy",
@@ -26,7 +38,17 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "about": "About",
-    "required": "is required"
+    "required": "is required",
+    "compare": "Compare",
+    "addedToCompare": "Added to comparison",
+    "removedFromCompare": "Removed from comparison",
+    "maxCompareReached": "You can only compare up to 3 vehicles",
+    "viewDetails": "View Details"
+  },
+  "Status": {
+    "available": "Available",
+    "reserved": "Reserved",
+    "sold": "Sold"
   },
   "Auth": {
     "welcomeBack": "Welcome Back",
