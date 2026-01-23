@@ -53,6 +53,11 @@ export function AdminSidebar({ children }: { children: React.ReactNode }) {
       icon: UserCog,
     },
     {
+      title: t('acquisitions'),
+      url: '/admin/acquisitions',
+      icon: Car, // Or another icon like 'ShoppingBag' or 'CreditCard' if imported
+    },
+    {
       title: t('featureFlags'),
       url: '/admin/settings/features',
       icon: Settings,

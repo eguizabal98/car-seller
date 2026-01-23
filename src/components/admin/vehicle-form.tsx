@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { updateVehicle, createVehicle } from '@/app/admin/inventory/actions'
+import { updateVehicle, createVehicle } from '@/app/[locale]/admin/inventory/actions'
 import { MediaUploader, MediaItem } from '@/components/admin/media-uploader'
 
 interface VehicleFormProps {
@@ -38,7 +38,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
   const t = useTranslations('Admin')
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
+
   const vehicleSchema = z.object({
     make: z.string().min(1, t('makeRequired')),
     model: z.string().min(1, t('modelRequired')),
@@ -122,23 +122,23 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
     setIsSubmitting(true)
     try {
       // Separate standard columns from feature fields
-      const { 
-        engine, 
-        drivetrain, 
-        interior_color, 
-        mpg, 
-        stock_no, 
+      const {
+        engine,
+        drivetrain,
+        interior_color,
+        mpg,
+        stock_no,
         doors,
         amenities,
         owned_since,
         v5c_issue_date,
         keys_available,
         inspection_report_url,
-        ...standardData 
+        ...standardData
       } = data
 
       // Parse amenities string back to array
-      const amenitiesArray = amenities 
+      const amenitiesArray = amenities
         ? amenities.split(',').map(item => item.trim()).filter(Boolean)
         : []
 
@@ -172,7 +172,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
         })
         toast.success(t('vehicleCreated'))
       }
-      
+
       router.push('/admin/inventory')
     } catch (error) {
       console.error('Error saving vehicle:', error)
@@ -260,7 +260,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
               </FormItem>
             )}
           />
-           <FormField
+          <FormField
             control={form.control}
             name="mileage"
             render={({ field }) => (
@@ -318,7 +318,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
               </FormItem>
             )}
           />
-           <FormField
+          <FormField
             control={form.control}
             name="color"
             render={({ field }) => (
@@ -445,7 +445,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
               </FormItem>
             )}
           />
-           <FormField
+          <FormField
             control={form.control}
             name="doors"
             render={({ field }) => (
@@ -489,9 +489,9 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
         </div>
 
         <div className="space-y-4">
-          <MediaUploader 
-            initialMedia={media} 
-            onChange={setMedia} 
+          <MediaUploader
+            initialMedia={media}
+            onChange={setMedia}
             vehicleId={vehicle?.id}
           />
         </div>
